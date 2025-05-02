@@ -1,65 +1,109 @@
 .header-bar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 10vh;
-    background-color: rgba(33, 30, 28, 0.65);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-  }
-  
-  /* Sub-barras laterales */
-  .side-strip {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 8vh;
-    background-color: rgba(33, 30, 28, 1);
-    z-index: 1;
-  }
-  
-  .left-strip {
-    left: 0;
-  }
-  
-  .right-strip {
-    right: 0;
-  }
-  
-  /* Iconos */
-  .icon {
-    position: absolute;
-    height: 60%;
-    cursor: pointer;
-    z-index: 2;
-  }
-  
-  .left-icon {
-    left: 15px;
-  }
-  
-  .right-icon {
-    right: 15px;
-  }
-  
-  /* Centro expandido con título */
-  .center-bar {
-    background-color: rgba(33, 30, 28, 1);
-    padding: 0.8em 5em;
-    border-radius: 8px;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .header-title {
-    margin: 0;
-    font-size: 1.5rem;
-    color: white;
-    font-family: 'Georgia', serif;
-    text-align: center;
-  }
-  
+  position: fixed;
+  top: 1vw;
+  width: 100%;
+  height: 6vw;
+  background-color: rgba(33, 30, 28, 0.65);
+  opacity: 0.88;  padding: 0; /* Elimina el padding */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 0; /* Elimina el padding */
+}
+
+/* Sub-barras laterales */
+.side-strip {
+  position: absolute;
+  top: 2.3vw;
+  bottom: 0;
+  width: 15vw; /* Cambiar a un valor proporcional al ancho de la pantalla */
+  height: 2vw; /* Mantener la altura proporcional */
+  background-color: #140F0B;
+  opacity: 0.7;  padding: 0; /* Elimina el padding */
+  z-index: 1;
+}
+
+.left-strip {
+  left: 0;
+}
+
+.right-strip {
+  right: 0;
+}
+
+/* Iconos */
+.icon {
+  position: absolute;
+  height: 55%; /* Mantener proporcional al contenedor */
+  cursor: pointer;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: auto; /* Se ajusta al tamaño del contenido */
+  max-width: 6vw; /* Limita el tamaño máximo proporcional */
+}
+
+.icon .background {
+  position: absolute;
+  top: -10%; /* Mueve el fondo hacia arriba para que quede centrado */
+  left: -20%; /* Mueve el fondo hacia la izquierda */
+  width: 140%; /* Agranda el fondo al 120% del tamaño del icono */
+  height: 120%; /* Agranda la altura del fondo proporcionalmente */
+  background-color: #0A0706; /* Color de fondo del cuadrado */
+  border-radius: 1vh; /* Bordes levemente redondeados */
+  opacity: 0.8; /* Opacidad solo en el fondo */
+  z-index: 2; /* Fondo debajo del icono */
+}
+
+
+.icon > * {
+  z-index: 2; /* Asegura que el icono esté encima del fondo */
+}
+
+/* Posicionamiento de los iconos */
+.left-icon {
+  left: 3vw; /* Cambio a unidades proporcionales */
+}
+
+.right-icon {
+  right: 3vw; /* Cambio a unidades proporcionales */
+}
+
+.center-bar {
+  position: relative; /* Necesario para posicionar el rectángulo detrás del texto */
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%; /* Asegura que ocupe el 100% de ancho disponible */
+}
+
+/* El rectángulo ajustable detrás del texto */
+.center-bar::before {
+  content: '';
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #0A0706; /* Color del rectángulo */
+  z-index: 1; /* Asegura que el rectángulo quede detrás del texto */
+  width: 75%; /* Ancho ajustable proporcionalmente */
+  height: 70%; /* Alto ajustable proporcionalmente */
+  border-radius: 0.5rem; /* Bordes redondeados opcionales */
+}
+
+.header-title {
+  margin-top: 1;
+  margin: 0;
+  font-size: 4vw; /* Cambiar tamaño de fuente a proporcional */
+  color: rgb(209, 209, 209);
+  opacity: 96%;
+  font-family: Gabriola, regular;
+  text-align: center;
+  font-weight: lighter; /* Letras más delgadas */
+ /* Aumenta el espaciado entre letras */
+  z-index: 2; /* Asegura que el texto esté por encima del rectángulo */
+  transform: translateY(0.28vw );
+}
