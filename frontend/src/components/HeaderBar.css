@@ -84,13 +84,13 @@
 .center-bar::before {
   content: '';
   position: absolute;
-  top: 15%;
+  top: vw;
   left: 50%;
   transform: translateX(-50%);
   background-color: #0A0706; /* Color del rectángulo */
   z-index: 1; /* Asegura que el rectángulo quede detrás del texto */
-  width: 75%; /* Ancho ajustable proporcionalmente */
-  height: 70%; /* Alto ajustable proporcionalmente */
+  width: 80vw; /* Ancho ajustable proporcionalmente */
+  height: 4vw; /* Alto ajustable proporcionalmente */
   border-radius: 0.5rem; /* Bordes redondeados opcionales */
 }
 

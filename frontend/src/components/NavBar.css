@@ -16,8 +16,8 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 90%; /* Reducir la altura del fondo */
-  background-color: #30231b;
+  height: 50%; /* Reducir la altura del fondo */
+  background-color: #ACA5A1;
   opacity: 0.4; /* Opacidad solo en el fondo */
   z-index: 1;
   border-radius: 0.5rem; /* Bordes redondeados opcionales */
@@ -26,7 +26,7 @@
 .navbar ul {
   list-style: none;
   display: flex;
-  gap: 7  rem;
+  gap: 2rem;
   padding: 0;
   margin: 0;
   z-index: 2; /* Asegura que el texto esté por encima del fondo */
@@ -36,7 +36,6 @@
   color: white;
   text-decoration: none;
   font-weight: regular;
-  letter-spacing: 0.4rem;
 }
 
 /* Subtítulos en la navbar */
