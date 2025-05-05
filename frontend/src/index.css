@@ -18,5 +18,5 @@ body, html, #root {
   padding: 2rem;
   color: white;
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
-  padding-top: 15vh; /* es para que no se tape el header bar y navbar*/
+  padding-top: 12vw; /* es para que no se tape el header bar y navbar*/
 }
