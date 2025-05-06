@@ -1,0 +1,64 @@
+.contactPage {
+    padding: 20px;
+    background-color: transparent; /* Mantener el fondo 3D */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  h1 {
+    text-align: center;
+  }
+  
+  /* Contenedor principal de la información de contacto */
+  .contactInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 75%; /* Ajusta el tamaño del recuadro */
+    background-color: #fff; /* Fondo blanco */
+    border: 35px solid #100303; /* Borde negro */
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  /* Logo Panel */
+  .logoPanel {
+    width: 175px;
+    height: 275px;
+    background-color: #555;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+  }
+  
+  .logoImage {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+  }
+  
+  /* Panel de los QR */
+  .qrPanel {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    width: 70%; /* Ajusta el tamaño de la columna de QR */
+  }
+  
+  .qrImageWrapper {
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    width: 100px; /* Controla el tamaño de los QR */
+    height: 100px; 
+  }
+  
+  .qrImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
