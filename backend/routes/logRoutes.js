@@ -1,9 +1,17 @@
-const express = require('express');
-const { crearLog } = require('../controllers/logController');
-const { verifyToken } = require('../middlewares/authMiddleware'); // Verificación de token
+const express = require("express");
 const router = express.Router();
+const logController = require("../controllers/logController");
 
-// Ruta para registrar un log (requiere token)
-router.post('/crear', verifyToken, crearLog);
+// Crear un nuevo log
+router.post("/", logController.createLog);
+
+// Obtener todos los logs
+router.get("/", logController.getAllLogs);
+
+// Obtener logs por usuario ID
+router.get("/user/:userId", logController.getLogsByUserId);
+
+// Eliminar un log
+router.delete("/:id", logController.deleteLog);
 
 module.exports = router;

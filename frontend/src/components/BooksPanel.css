@@ -1,0 +1,44 @@
+.books-panel {
+  width: 100%;
+  height: auto; /* La altura es ajustable dinámicamente según el contenido */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Define las columnas con un ancho mínimo de 150px */
+  gap: 0px; /* Sin espaciado entre los items */
+  justify-items: center; /* Centra las imágenes horizontalmente */
+  align-items: flex-start; /* Alinea las imágenes desde la parte superior */
+}
+
+.book-item {
+  width: 150px; /* Ajusta el ancho de cada imagen */
+  height: 200px; /* Ajusta la altura de cada imagen */
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative; /* Necesario para posicionar el título sobre la imagen */
+}
+
+.book-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Asegura que la imagen no se distorsione */
+}
+
+.book-item h3 {
+  position: absolute; /* Posiciona el título sobre la imagen */
+  color: white;
+  font-size: 16px; /* Ajusta el tamaño del texto */
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+  width: 100%; /* El título ocupará todo el ancho de la imagen */
+  top: 50%; /* El título se colocará en el centro vertical */
+  left: 50%; /* Centra el título horizontalmente */
+  transform: translate(-50%, -50%); /* Ajusta la posición para asegurar que esté centrado */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para mejorar la visibilidad del texto */
+  padding: 5px; /* Ajuste para darle espacio entre el título y los bordes */
+  box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+}

@@ -1,25 +1,51 @@
-const Log = require('../models/Log');
+const mongoose = require("mongoose");
+const Log = mongoose.model("Log", new mongoose.Schema({
+  usuario_id: mongoose.Schema.Types.ObjectId,
+  accion: String,
+  ip: String,
+  fecha_accion: Date
+}));
 
-const crearLog = async (req, res) => {
+// Crear un nuevo log
+exports.createLog = async (req, res) => {
   try {
-    const { accion } = req.body;
-    const { id: usuario_id } = req.user;  // Obtenemos el ID del usuario desde el token JWT
-    const ip = req.ip;  // Obtenemos la IP desde la solicitud
-
-    // Crear nuevo log
-    const nuevoLog = new Log({
-      usuario_id,
-      accion,
-      ip,
-      fecha_accion: Date.now()  // Registrar la fecha actual
-    });
-
-    await nuevoLog.save();  // Guardamos el log en la base de datos
-
-    res.status(201).json({ mensaje: 'Log registrado con éxito', log: nuevoLog });
-  } catch (error) {
-    res.status(500).json({ mensaje: 'Error al registrar log', error });
+    const log = new Log(req.body);
+    await log.save();
+    res.status(201).json({ message: "Log creado", log });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 };
 
-module.exports = { crearLog };
+// Obtener todos los logs
+exports.getAllLogs = async (req, res) => {
+  try {
+    const logs = await Log.find();
+    res.status(200).json(logs);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+// Obtener logs por usuario ID
+exports.getLogsByUserId = async (req, res) => {
+  try {
+    const logs = await Log.find({ usuario_id: req.params.userId });
+    res.status(200).json(logs);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+// Eliminar un log
+exports.deleteLog = async (req, res) => {
+  try {
+    const deletedLog = await Log.findByIdAndDelete(req.params.id);
+    if (!deletedLog) {
+      return res.status(404).json({ message: "Log no encontrado" });
+    }
+    res.status(200).json({ message: "Log eliminado" });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
