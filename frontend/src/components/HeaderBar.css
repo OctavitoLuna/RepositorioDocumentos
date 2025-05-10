@@ -1,8 +1,8 @@
 .header-bar {
   position: fixed;
-  top: 1vw;
+  top: 1vh;
   width: 100%;
-  height: 6vw;
+  height: 30%;
   background-color: rgba(33, 30, 28, 0.65);
   opacity: 0.88;  padding: 0; /* Elimina el padding */
   display: flex;
@@ -15,12 +15,12 @@
 /* Sub-barras laterales */
 .side-strip {
   position: absolute;
-  top: 2.3vw;
-  bottom: 0;
-  width: 15vw; /* Cambiar a un valor proporcional al ancho de la pantalla */
-  height: 2vw; /* Mantener la altura proporcional */
+  top: 50%; /* Centra las barras verticalmente */
+  transform: translateY(-50%); /* Ajusta la posición para el centro */
+  width: 15vw;
+  height: 2vw;
   background-color: #140F0B;
-  opacity: 0.7;  padding: 0; /* Elimina el padding */
+  opacity: 0.7;
   z-index: 1;
 }
 
@@ -84,22 +84,21 @@
 .center-bar::before {
   content: '';
   position: absolute;
-  top: vw;
   left: 50%;
   transform: translateX(-50%);
   background-color: #0A0706; /* Color del rectángulo */
   z-index: 1; /* Asegura que el rectángulo quede detrás del texto */
   width: 80vw; /* Ancho ajustable proporcionalmente */
   height: 4vw; /* Alto ajustable proporcionalmente */
-  border-radius: 0.5rem; /* Bordes redondeados opcionales */
+  border-radius: 0.3rem; /* Bordes redondeados opcionales */
 }
 
 .header-title {
   margin-top: 1;
   margin: 0;
   font-size: 4vw; /* Cambiar tamaño de fuente a proporcional */
-  color: rgb(209, 209, 209);
-  opacity: 96%;
+  color: rgb(231, 231, 231);
+  opacity: 100%;
   font-family: Gabriola, regular;
   text-align: center;
   font-weight: lighter; /* Letras más delgadas */

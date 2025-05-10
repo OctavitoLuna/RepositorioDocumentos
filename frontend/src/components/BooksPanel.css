@@ -1,44 +1,113 @@
 .books-panel {
   width: 100%;
-  height: auto; /* La altura es ajustable dinámicamente según el contenido */
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Define las columnas con un ancho mínimo de 150px */
-  gap: 0px; /* Sin espaciado entre los items */
-  justify-items: center; /* Centra las imágenes horizontalmente */
-  align-items: flex-start; /* Alinea las imágenes desde la parte superior */
-}
-
-.book-item {
-  width: 150px; /* Ajusta el ancho de cada imagen */
-  height: 200px; /* Ajusta la altura de cada imagen */
-  margin: 0;
+  min-height: 30vw;
+  margin-top: 21vh;
+  background-color: rgba(19, 15, 8, 0.93); /* fondo negro semitransparente */
+  padding: 1vw;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  text-align: center;
-  position: relative; /* Necesario para posicionar el título sobre la imagen */
+  margin-bottom: 2.5vw;
 }
 
-.book-item img {
+/* ACOMODO DE IMÁGENES EN FILAS SIN ESPACIO ENTRE COLUMNAS NI FILAS */
+.books-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* mantener tamaño máximo de .book-item */
+  justify-content: start;
+  align-items: start;
+  width: 100%;
+  gap: 0; 
+  padding: 0px;
+  max-height: calc(7 * 15vw); /* 3 filas de 300px */
+  overflow: hidden; /* oculta filas adicionales */
+}
+
+/* NO TOCAR tamaños ni estructura */
+.book-item {
+  width: 100%;
+  max-width: 15vw;
+  height: 15vw;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.book-image-container {
+  position: relative;
+  width: 15vw;
+  height: 3.5vw;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.book-image-container img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Asegura que la imagen no se distorsione */
+  object-fit: contain;
+  background-color: #000000;
+  display: block;
 }
 
-.book-item h3 {
-  position: absolute; /* Posiciona el título sobre la imagen */
-  color: white;
-  font-size: 16px; /* Ajusta el tamaño del texto */
+.overlay-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.overlay-text h3 {
+  background-color: rgba(175, 161, 161, 0.3);
+  padding: 8px 12px;
+  color: rgb(226, 226, 226);
+  font-size: 1vw;
   font-weight: bold;
   margin: 0;
-  padding: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
-  width: 100%; /* El título ocupará todo el ancho de la imagen */
-  top: 50%; /* El título se colocará en el centro vertical */
-  left: 50%; /* Centra el título horizontalmente */
-  transform: translate(-50%, -50%); /* Ajusta la posición para asegurar que esté centrado */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para mejorar la visibilidad del texto */
-  padding: 5px; /* Ajuste para darle espacio entre el título y los bordes */
-  box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+  border-radius: 6px;
+  text-align: center;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  font-size: 2rem;
+  padding: 10px 16px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.carousel-button:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.carousel-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.carousel-button.left {
+  left: 10px;
+}
+
+.carousel-button.right {
+  right: 10px;
+}
+
+/* Asegúrate de que .books-panel tenga posición relativa */
+.books-panel {
+  position: relative; /* ✅ necesario para posicionar los botones relativos a este contenedor */
 }
