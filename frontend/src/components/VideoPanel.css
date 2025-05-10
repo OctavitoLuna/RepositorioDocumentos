@@ -1,0 +1,23 @@
+/* Video Panel */
+.video-panel {
+  width: 100%; /* Ocupa todo el ancho de la pantalla */
+  padding: 0; /* Sin relleno */
+  display: flex;
+  justify-content: center; /* Centra el contenedor horizontalmente */
+  align-items: center; /* Centra el contenedor verticalmente */
+  background-color: rgba(19, 15, 8, 0.93); /* Fondo semitransparente */
+}
+
+.video-container {
+  width: 100%; /* El video ocupa el 100% del ancho */
+  height: 56.25vw; /* Altura proporcional al ancho (relación 16:9) */
+  overflow: hidden; /* Evita que se vean espacios en blanco */
+  position: relative; /* Necesario para el ajuste adecuado del video */
+}
+
+.video-element {
+  width: 100%; /* El video ocupa todo el ancho del contenedor */
+  height: 100%; /* Ajusta la altura del video a la misma altura del contenedor */
+  object-fit: cover; /* Mantiene la proporción del video, con zoom si es necesario */
+  background-color: black; /* Fondo negro en caso de no ser un video */
+}

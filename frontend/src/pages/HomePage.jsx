@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import BooksPanel from '../components/BooksPanel'; // Importa BooksPanel
 import InteractiveBook from '../components/InteractiveBook'; // Importa InteractiveBook
+import VideoPanel from '../components/VideoPanel'; // Importa VideoPanel
 import axios from 'axios';
 
 export default function HomePage() {
@@ -24,7 +25,7 @@ export default function HomePage() {
     .slice(0, 4); // Toma los primeros 4 documentos
 
 
-    
+
   return (
     <div>
       {/* BooksPanel sigue estando aquí */}
@@ -40,6 +41,7 @@ export default function HomePage() {
           />
         ))}
       </div>
+      <VideoPanel />
     </div>
   );
 }
