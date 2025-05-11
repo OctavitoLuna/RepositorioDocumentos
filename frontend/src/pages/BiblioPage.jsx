@@ -49,7 +49,7 @@ const BiblioPage = () => {
   };
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto" style={{ marginTop: '20vh' }}>
       <header className="mb-6 flex justify-between items-center">
         <BusquedaLibros onSearch={handleSearch} />
         <FiltroLibro onFilter={handleFilter} />
