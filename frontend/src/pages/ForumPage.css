@@ -1,6 +1,6 @@
 /* Estilos generales del foro */
 .forum-container {
-    
+    margin-top: 22vh;
     background-size: cover;
     background-position: center;
     min-height: 100vh;
