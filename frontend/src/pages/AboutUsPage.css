@@ -1,5 +1,5 @@
 .aboutUsPage {
-    padding: 20px;
+    margin-top: 10vw;
     background-color: transparent; /* Mantener el fondo 3D */
     display: flex;
     flex-direction: column;

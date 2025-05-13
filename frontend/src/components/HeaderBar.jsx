@@ -1,7 +1,18 @@
 import './HeaderBar.css';
+import React, { useState } from 'react';
+import LoginDialog from './LoginDialog'; // Importamos el LoginDialog
 
 export default function HeaderBar() {
+  const [isLoginDialogOpen, setLoginDialogOpen] = useState(false); // Estado para controlar el LoginDialog
   const baseHeight = 120; // Altura base en px (ajustable)
+
+  const openLoginDialog = () => {
+    setLoginDialogOpen(true); // Abrir el LoginDialog
+  };
+
+  const closeLoginDialog = () => {
+    setLoginDialogOpen(false); // Cerrar el LoginDialog
+  };
 
   return (
     <header className="header-bar" style={{ height: `${baseHeight}px` }}>
@@ -23,18 +34,21 @@ export default function HeaderBar() {
         <h1 className="header-title">Repositorio de Documentos Históricos</h1>
       </div>
 
-      {/* Ícono derecho con fondo opaco */}
+      {/* Ícono derecho que abre el LoginDialog */}
       <div className="icon right-icon">
         <div className="background"></div> {/* Fondo con opacidad */}
         <img
           src="/global/login.png"
           alt="Login Icon"
-          onClick={() => console.log('Icono derecho clickeado')}
+          onClick={openLoginDialog} // Al hacer clic, abre el LoginDialog
         />
       </div>
 
       {/* Fondo delgado lateral derecho */}
       <div className="side-strip right-strip"></div>
+
+      {/* Aquí pasamos el estado del diálogo y la función para cerrarlo */}
+      <LoginDialog isOpen={isLoginDialogOpen} closeDialog={closeLoginDialog} />
     </header>
   );
 }
