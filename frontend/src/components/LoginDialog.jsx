@@ -1,25 +1,48 @@
 // LoginDialog.jsx
 import React, { useState } from "react";
-import "./LoginDialog.css"; // Asegúrate de tener este archivo de CSS con los estilos necesarios
+import axios from "axios";
+import "./LoginDialog.css";
 
 export default function LoginDialog({ isOpen, closeDialog }) {
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(""); // Aquí va el correo
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
-  const handleLogin = () => {
-    console.log("Login details:", username, password);
-    closeDialog(); // Cierra el diálogo después de iniciar sesión
+  const handleLogin = async () => {
+    setError(null);
+    try {
+      const response = await axios.post("http://localhost:3001/auth/login", {
+        correo: username,
+        contraseña: password,
+      });
+
+      // Aquí asume que el backend devuelve token y user
+      const { token, user } = response.data;
+
+      // Ejemplo: verificar rol admin
+      if (user.rol !== "admin") {
+        setError("Solo usuarios admin pueden iniciar sesión");
+        return;
+      }
+
+      localStorage.setItem("token", token);
+
+      // Puedes guardar el usuario en contexto o estado global aquí si quieres
+
+      console.log("Login exitoso:", user);
+      closeDialog();
+    } catch (err) {
+      setError(err.response?.data?.error || "Error en el login");
+    }
   };
 
-  if (!isOpen) return null; // Si el diálogo no está abierto, no se renderiza
+  if (!isOpen) return null;
 
   return (
     <div className="loginDialog">
       <div className="loginDialogContent">
-        {/* Botón de Cerrar */}
         <button className="closeButton" onClick={closeDialog}>X</button>
-        
-        {/* Icono de persona fuera del contenedor */}
+
         <div className="loginIconWrapper">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -38,13 +61,12 @@ export default function LoginDialog({ isOpen, closeDialog }) {
           </svg>
         </div>
 
-        {/* Título de Iniciar Sesión */}
         <h2 className="loginTitle">INICIAR SESIÓN</h2>
-        
+
         <form onSubmit={(e) => e.preventDefault()}>
-          <label>Usuario</label>
+          <label>Correo</label>
           <input
-            type="text"
+            type="email"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
@@ -57,6 +79,7 @@ export default function LoginDialog({ isOpen, closeDialog }) {
             required
           />
           <button type="button" onClick={handleLogin}>Iniciar sesión</button>
+          {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
         </form>
       </div>
     </div>
