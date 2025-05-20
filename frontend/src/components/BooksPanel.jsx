@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './BooksPanel.css'; // Asegúrate de tener este import para el CSS modular
-const bookImagePath = '/home/book.png'; // Ruta relativa desde public
+import './BooksPanel.css';
+import BookData from './BookData'; // Importa el nuevo componente
+
+const bookImagePath = '/home/book.png';
 
 const BooksPanel = () => {
   const [documents, setDocuments] = useState([]);
-  const [rows, setRows] = useState(3); 
-  const [columns, setColumns] = useState(4); 
-  const [currentPage, setCurrentPage] = useState(0); 
+  const [rows, setRows] = useState(3);
+  const [columns, setColumns] = useState(4);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [selectedDocument, setSelectedDocument] = useState(null); // Nuevo estado
 
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
         const response = await axios.get('http://localhost:3001/documents');
-        setDocuments(response.data); 
+        setDocuments(response.data);
       } catch (error) {
         console.error('Error fetching documents:', error);
       }
     };
-
     fetchDocuments();
   }, []);
 
@@ -39,11 +41,26 @@ const BooksPanel = () => {
     }
   };
 
+  // Abrir BookData con documento clickeado
+  const handleBookClick = (document) => {
+    setSelectedDocument(document);
+  };
+
+  // Cerrar BookData
+  const handleCloseBookData = () => {
+    setSelectedDocument(null);
+  };
+
   return (
-        <div className="books-panel">
+    <div className="books-panel">
       <div className="books-container">
         {currentDocuments.map((document) => (
-          <div className="book-item" key={document._id}>
+          <div
+            className="book-item"
+            key={document._id}
+            onClick={() => handleBookClick(document)} // click para abrir BookData
+            style={{ cursor: 'pointer' }}
+          >
             <div className="book-image-container">
               <img src={bookImagePath} alt={document.titulo} />
               <div className="overlay-text">
@@ -54,7 +71,6 @@ const BooksPanel = () => {
         ))}
       </div>
 
-      {/* Botones tipo carrusel */}
       <button
         className="carousel-button left"
         onClick={goToPrevPage}
@@ -69,8 +85,12 @@ const BooksPanel = () => {
       >
         ▶
       </button>
-    </div>
 
+      {/* Mostrar BookData si hay documento seleccionado */}
+      {selectedDocument && (
+        <BookData document={selectedDocument} onClose={handleCloseBookData} />
+      )}
+    </div>
   );
 };
 

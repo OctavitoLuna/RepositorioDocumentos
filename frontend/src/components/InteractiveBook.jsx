@@ -2,6 +2,7 @@ import React from 'react';
 import './InteractiveBook.css'; // Importamos el CSS para los estilos
 import PdfViewer from './PdfViewer'; // Importa tu visor PDF
 
+
 const bookImagePath = '/home/bookTape.png'; // Nueva imagen
 
 const InteractiveBook = ({ document, position }) => {
