@@ -145,3 +145,15 @@
   margin: 1vw 0;
   line-height: 1.4em;
 }
+/* Para que PdfViewer dentro del panel-content ocupe todo el espacio y tenga scroll */
+.interactive-book-item .panel-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.interactive-book-item .panel-content > div.pdf-viewer-container {
+  flex: 1 1 auto; /* Ocupa todo el espacio posible */
+  min-height: 0; /* Para permitir scroll */
+  overflow: auto;
+}
