@@ -1,20 +1,12 @@
-const express = require("express");
+const express = require('express');
+const { crearDocumento, obtenerDocumentos } = require('../controllers/documentController');
+const { verifyToken, isAdmin } = require('../middlewares/authMiddleware');  // Asegúrate de importar los middlewares
 const router = express.Router();
-const documentController = require("../controllers/documentController");
 
-// Crear un nuevo documento
-router.post("/", documentController.createDocument);
+// Ruta para crear un documento (solo para administradores)
+router.post('/crear', verifyToken, isAdmin, crearDocumento);  // Aquí estamos usando el middleware para verificar el token y que sea admin
 
-// Obtener todos los documentos
-router.get("/", documentController.getAllDocuments);
-
-// Obtener un documento por su ID
-router.get("/:id", documentController.getDocumentById);
-
-// Actualizar un documento
-router.put("/:id", documentController.updateDocument);
-
-// Eliminar un documento
-router.delete("/:id", documentController.deleteDocument);
+// Ruta para obtener documentos (pueden acceder los usuarios autenticados)
+router.get('/obtener', verifyToken, obtenerDocumentos);  // Solo necesita un token válido
 
 module.exports = router;

@@ -1,74 +1,27 @@
-const mongoose = require("mongoose");
-const Document = mongoose.model("Document", new mongoose.Schema({
-  titulo: String,
-  autor: String,
-  descripcion: String,
-  fecha: Date,
-  tipo: String,
-  categoria: String,
-  archivo_url: String,
-  usuario_responsable: mongoose.Schema.Types.ObjectId,
-  fecha_subida: Date,
-  comentarios: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
-  versiones: [String]
-}));
+const Document = require('../models/Document');
 
 // Crear un nuevo documento
-exports.createDocument = async (req, res) => {
+const crearDocumento = async (req, res) => {
   try {
-    const document = new Document(req.body);
-    await document.save();
-    res.status(201).json({ message: "Documento creado", document });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    const { titulo, autor, fecha, tipo, categoria, archivo_url, descripcion, usuario_responsable } = req.body;
+
+    const documento = new Document({ titulo, autor, fecha, tipo, categoria, archivo_url, descripcion, usuario_responsable });
+    await documento.save();
+
+    res.status(201).json({ mensaje: 'Documento creado con éxito', documento });
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error al crear documento', error });
   }
 };
 
 // Obtener todos los documentos
-exports.getAllDocuments = async (req, res) => {
+const obtenerDocumentos = async (req, res) => {
   try {
-    const documents = await Document.find();
-    res.status(200).json(documents);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    const documentos = await Document.find();
+    res.status(200).json(documentos);
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error al obtener documentos', error });
   }
 };
 
-// Obtener un documento por ID
-exports.getDocumentById = async (req, res) => {
-  try {
-    const document = await Document.findById(req.params.id);
-    if (!document) {
-      return res.status(404).json({ message: "Documento no encontrado" });
-    }
-    res.status(200).json(document);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
-
-// Actualizar un documento
-exports.updateDocument = async (req, res) => {
-  try {
-    const updatedDocument = await Document.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updatedDocument) {
-      return res.status(404).json({ message: "Documento no encontrado" });
-    }
-    res.status(200).json({ message: "Documento actualizado", updatedDocument });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
-
-// Eliminar un documento
-exports.deleteDocument = async (req, res) => {
-  try {
-    const deletedDocument = await Document.findByIdAndDelete(req.params.id);
-    if (!deletedDocument) {
-      return res.status(404).json({ message: "Documento no encontrado" });
-    }
-    res.status(200).json({ message: "Documento eliminado" });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
+module.exports = { crearDocumento, obtenerDocumentos };

@@ -1,17 +1,12 @@
-const express = require("express");
+const express = require('express');
+const { crearComentario, obtenerComentarios } = require('../controllers/commentController');
+const { verifyToken, puedeComentar } = require('../middlewares/authMiddleware'); // Importamos los middlewares
 const router = express.Router();
-const commentController = require("../controllers/commentController");
 
-// Crear un nuevo comentario
-router.post("/", commentController.createComment);
+// Ruta para crear un comentario (solo usuarios autenticados con permisos)
+router.post('/crear', verifyToken, puedeComentar, crearComentario);  // Protegemos la ruta con el token y permisos
 
-// Obtener todos los comentarios
-router.get("/", commentController.getAllComments);
-
-// Obtener comentarios por documento ID
-router.get("/document/:documentId", commentController.getCommentsByDocumentId);
-
-// Eliminar un comentario
-router.delete("/:id", commentController.deleteComment);
+// Ruta para obtener comentarios de un documento
+router.get('/obtener/:documento_id', obtenerComentarios);  // Esta ruta es para obtener los comentarios de un documento
 
 module.exports = router;

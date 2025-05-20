@@ -1,101 +1,51 @@
-const mongoose = require("mongoose");
-const User = mongoose.model("User", new mongoose.Schema({
-  nombre: String,
-  apellido: String,
-  correo: String,
-  contraseña: String,
-  rol: String,
-  permisos: [String],
-  autenticacion_2fa: Boolean,
-  fecha_registro: Date
-}));
+const User = require('../models/User');
+const jwt = require('jsonwebtoken');
 
-// Crear un nuevo usuario
-exports.createUser = async (req, res) => {
-  const { nombre, apellido, correo, contraseña, rol } = req.body;
-
-  if (!nombre || !apellido || !correo || !contraseña || !rol) {
-    return res.status(400).json({ error: "Todos los campos son obligatorios" });
-  }
-
+// Registrar un nuevo usuario
+const registrarUsuario = async (req, res) => {
   try {
-    const user = new User(req.body);
-    await user.save();
-    res.status(201).json({ message: "Usuario creado", user });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
+    const { nombre, apellido, correo, contraseña, rol } = req.body;
 
-
-// Obtener todos los usuarios
-exports.getAllUsers = async (req, res) => {
-  try {
-    const users = await User.find();
-    res.status(200).json(users);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
-
-// Obtener un usuario por ID
-exports.getUserById = async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
-    }
-    res.status(200).json(user);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-};
-
-// Actualizar un usuario
-exports.updateUser = async (req, res) => {
-  try {
-    const { nombre, apellido, correo, contraseña, rol, permisos, fecha_registro } = req.body;
-
-    // Validar que los datos obligatorios estén presentes
-    if (!nombre || !apellido || !correo || !contraseña || !rol) {
-      return res.status(400).json({ error: "Faltan datos obligatorios" });
+    // Verificar si el correo ya está registrado
+    const usuarioExistente = await User.findOne({ correo });
+    if (usuarioExistente) {
+      return res.status(400).json({ mensaje: 'El correo ya está registrado' });
     }
 
-    // Encontrar y actualizar el usuario por su ID
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, {
-      nombre,
-      apellido,
-      correo,
-      contraseña,  // Asegúrate de usar un hash para la contraseña si es necesario
-      rol,
-      permisos,
-      fecha_registro
-    }, { new: true });
+    // Crear nuevo usuario
+    const usuario = new User({ nombre, apellido, correo, contraseña, rol });
+    await usuario.save();
 
-    if (!updatedUser) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
-    }
+    // Generar un token JWT
+    const token = jwt.sign({ id: usuario._id, rol: usuario.rol }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    res.status(200).json({ message: "Usuario actualizado", updatedUser });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(201).json({ mensaje: 'Usuario registrado con éxito', token });
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error al registrar usuario', error });
   }
 };
 
-
-// Eliminar un usuario
-exports.deleteUser = async (req, res) => {
+// Iniciar sesión (login)
+const loginUsuario = async (req, res) => {
   try {
-    // Eliminar el usuario por su ID
-    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    const { correo, contraseña } = req.body;
 
-    if (!deletedUser) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
+    const usuario = await User.findOne({ correo });
+    if (!usuario) {
+      return res.status(400).json({ mensaje: 'Usuario no encontrado' });
     }
 
-    res.status(200).json({ message: "Usuario eliminado" });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    const esValida = await usuario.compararContraseña(contraseña);
+    if (!esValida) {
+      return res.status(400).json({ mensaje: 'Contraseña incorrecta' });
+    }
+
+    const token = jwt.sign({ id: usuario._id, rol: usuario.rol }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    res.status(200).json({ mensaje: 'Login exitoso', token });
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error al iniciar sesión', error });
   }
 };
 
+module.exports = { registrarUsuario, loginUsuario };
