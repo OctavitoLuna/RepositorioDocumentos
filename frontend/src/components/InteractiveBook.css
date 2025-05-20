@@ -64,7 +64,7 @@
   height: 100%;
   object-fit: cover; /* Hace que la imagen cubra todo el contenedor */
   display: block;
-  background-color: #000;
+  background-color: #333333;
 }
 
 /* Texto centrado sobre la imagen */
@@ -101,7 +101,7 @@
   width: 0; /* Inicialmente el panel tiene un ancho de 0 */
   top: 2.5%;
   height: 95%;
-  background-color: rgba(7, 6, 6, 0.9); /* Fondo negro con opacidad */
+  background-color: rgba(8, 8, 8, 0.7); /* Fondo negro con opacidad */
   transition: width 0.3s ease; /* Animación de expansión */
   z-index: 1; /* Asegura que el panel esté detrás de la imagen */
 }
@@ -121,4 +121,27 @@
 /* El panel permanece abierto cuando se hace click */
 .interactive-book-item.active .panel {
   width: 71vw; /* Ancho del panel cuando se activa */
+}
+/* Contenido dentro del panel lateral */
+.interactive-book-item .panel-content {
+  padding: 2vw;
+  color: white;
+  font-size: 1vw;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+/* Mostrar contenido al hacer hover */
+.interactive-book-item.left:hover .panel .panel-content,
+.interactive-book-item.right:hover .panel .panel-content {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.interactive-book-item .panel-content p {
+  margin: 1vw 0;
+  line-height: 1.4em;
 }

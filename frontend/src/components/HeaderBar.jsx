@@ -1,11 +1,16 @@
 import './HeaderBar.css';
 import React, { useState } from 'react';
 import LoginDialog from './LoginDialog'; // Importamos el LoginDialog
+import { useTheme } from '../context/ThemeContext';
 
 export default function HeaderBar() {
   const [isLoginDialogOpen, setLoginDialogOpen] = useState(false); // Estado para controlar el LoginDialog
-  const baseHeight = 120; // Altura base en px (ajustable)
-
+  const baseHeight = 120;
+  const { toggleTheme } = useTheme();
+    const handleThemeClick = () => {
+    console.log('[CLICK] Icono izquierdo presionado');
+    toggleTheme();
+  };
   const openLoginDialog = () => {
     setLoginDialogOpen(true); // Abrir el LoginDialog
   };
@@ -17,17 +22,17 @@ export default function HeaderBar() {
   return (
     <header className="header-bar" style={{ height: `${baseHeight}px` }}>
       {/* Fondo delgado lateral izquierdo */}
-      <div className="side-strip left-strip"></div>
+      <div className="side-strip left-strip" />
 
-      {/* Ícono izquierdo con fondo opaco */}
-      <div className="icon left-icon">
-        <div className="background"></div> {/* Fondo con opacidad */}
+      <div className="icon left-icon" onClick={handleThemeClick}>
+        <div className="background" />
         <img
           src="/global/theme.png"
           alt="Theme Icon"
-          onClick={() => console.log('Icono izquierdo clickeado')}
+          className="clickable-icon"
         />
       </div>
+
 
       {/* Título centrado con barra */}
       <div className="center-bar">
@@ -35,12 +40,11 @@ export default function HeaderBar() {
       </div>
 
       {/* Ícono derecho que abre el LoginDialog */}
-      <div className="icon right-icon">
-        <div className="background"></div> {/* Fondo con opacidad */}
+      <div className="icon right-icon" onClick={openLoginDialog}>
+        <div className="background" />
         <img
           src="/global/login.png"
           alt="Login Icon"
-          onClick={openLoginDialog} // Al hacer clic, abre el LoginDialog
         />
       </div>
 

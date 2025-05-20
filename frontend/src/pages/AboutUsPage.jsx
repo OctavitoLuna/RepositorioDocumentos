@@ -5,7 +5,6 @@ import "./AboutUsPage.css"; // Asegúrate de tener este archivo de CSS con los e
 export default function AboutUsPage() {
   return (
     <div className="aboutUsPage">
-      <h1>Sobre Nosotros</h1>
 
       {/* Contenedor con imagen y fondo */}
       <div className="aboutUsInfo">

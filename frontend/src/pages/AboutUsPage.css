@@ -20,7 +20,7 @@
     align-items: flex-start; /* Alinea a la izquierda */
     width: 80%; /* Ajusta el tamaño del recuadro */
     background-color: #fff; /* Fondo blanco */
-    border: 30px solid #333; /* Borde negro */
+    border: 30px solid #131313; /* Borde negro */
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad */

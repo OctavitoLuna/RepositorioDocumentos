@@ -19,7 +19,8 @@ import HeaderBar from './components/HeaderBar';
 import GraphPage from './pages/GraphPage';
 import { ApolloProvider } from '@apollo/client';
 import client from './apolloClient'; 
-
+import ColorTheme from './components/ColorTheme.jsx';
+import { ThemeProvider } from './context/ThemeContext';
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [documents, setDocuments] = useState([]);
@@ -44,6 +45,7 @@ export default function App() {
       <div className="app-container">
         {isLoading && <LoadingScreen />}
         <Background3D />
+        <ColorTheme theme="dark" /> 
         <HeaderBar />
         <NavBar />
 

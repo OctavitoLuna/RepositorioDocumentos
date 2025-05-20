@@ -5,12 +5,11 @@ import "./ContactPage.css"; // Asegúrate de tener este archivo de CSS con los e
 export default function ContactPage() {
   return (
     <div className="contactPage">
-      <h1>Contacto</h1>
 
       {/* Contenedor con logo y QR */}
       <div className="contactInfo">
         <div className="logoPanel">
-          <img src="path_to_logo.png" alt="Logo" className="logoImage" />
+          <img src="/global/contact/logo.png" alt="Logo" className="logoImage" />
         </div>
 
         <div className="qrPanel">

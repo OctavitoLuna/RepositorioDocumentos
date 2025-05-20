@@ -32,44 +32,33 @@
   right: 0;
 }
 
-/* Iconos */
 .icon {
   position: absolute;
-  height: 55%; /* Mantener proporcional al contenedor */
+  width: 70px;     /* ✅ Tamaño mínimo real clickeable */
+  height: 70px;
   cursor: pointer;
-  z-index: 2;
+  z-index: 3;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: auto; /* Se ajusta al tamaño del contenido */
-  max-width: 6vw; /* Limita el tamaño máximo proporcional */
 }
 
-.icon .background {
-  position: absolute;
-  top: -10%; /* Mueve el fondo hacia arriba para que quede centrado */
-  left: -20%; /* Mueve el fondo hacia la izquierda */
-  width: 140%; /* Agranda el fondo al 120% del tamaño del icono */
-  height: 120%; /* Agranda la altura del fondo proporcionalmente */
-  background-color: #0A0706; /* Color de fondo del cuadrado */
-  border-radius: 1vh; /* Bordes levemente redondeados */
-  opacity: 0.8; /* Opacidad solo en el fondo */
-  z-index: 2; /* Fondo debajo del icono */
+.icon img {
+  max-width: 100%;
+  max-height: 100%;
+  pointer-events: none; /* ✅ Asegura que el clic llegue al contenedor si no usas onClick en img */
 }
 
-
-.icon > * {
-  z-index: 2; /* Asegura que el icono esté encima del fondo */
-}
-
-/* Posicionamiento de los iconos */
 .left-icon {
-  left: 3vw; /* Cambio a unidades proporcionales */
+  left: 3vw;
+  background-color: rgba(255, 255, 255, 0); /* 🐞 TEMPORAL para depuración */
 }
 
 .right-icon {
-  right: 3vw; /* Cambio a unidades proporcionales */
+  right: 3vw;
+  background-color: rgba(24, 24, 24, 0); /* 🐞 TEMPORAL para depuración */
 }
+
 
 .center-bar {
   position: relative; /* Necesario para posicionar el rectángulo detrás del texto */
