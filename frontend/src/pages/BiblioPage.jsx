@@ -63,7 +63,9 @@ const BibliotecaPage = () => {
 
   return (
     <div style={styles.pageContainer}>
+      
       <div style={styles.contentWrapper}>
+        
         <FiltroLibro onFilterChange={setFiltro} />
         <BusquedaLibros onSearch={handleSearch} />
         {resultados.length === 0 ? (
@@ -83,7 +85,7 @@ const BibliotecaPage = () => {
 
 const styles = {
   pageContainer: {
-    marginTop: '10vw',
+    marginTop: '11vw',
     display: 'flex',
     justifyContent: 'center',
     backgroundColor: 'transparent',

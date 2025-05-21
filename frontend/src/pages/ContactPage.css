@@ -1,5 +1,5 @@
 .contactPage {
-    margin-top: 10vw;
+    margin-top: 8vw;
     background-color: transparent; /* Mantener el fondo 3D */
     display: flex;
     flex-direction: column;
@@ -17,7 +17,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 75%; /* Ajusta el tamaño del recuadro */
+    width: 90%; /* Ajusta el tamaño del recuadro */
     background-color: #fff; /* Fondo blanco */
     border: 35px solid #100303; /* Borde negro */
     padding: 20px;
@@ -26,8 +26,8 @@
   
   /* Logo Panel */
   .logoPanel {
-    width: 175px;
-    height: 275px;
+    width: 30%;
+    height: 70%;
     background-color: #555;
     display: flex;
     justify-content: center;
@@ -53,8 +53,8 @@
     margin: 10px;
     display: flex;
     justify-content: center;
-    width: 100px; /* Controla el tamaño de los QR */
-    height: 100px; 
+    width: 18%; /* Controla el tamaño de los QR */
+    height: 18%; 
   }
   
   .qrImage {
@@ -62,4 +62,19 @@
     height: 100%;
     object-fit: cover;
   }
-  
+  .bigImageContainer {
+  width:100%; /* Mismo ancho que .contactInfo */
+  max-height: 50vh;
+  margin-bottom: 20px; /* Espacio debajo de la imagen */
+
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.bigImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+  object-fit: cover;
+}

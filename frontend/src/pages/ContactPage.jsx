@@ -5,8 +5,12 @@ import "./ContactPage.css"; // Asegúrate de tener este archivo de CSS con los e
 export default function ContactPage() {
   return (
     <div className="contactPage">
+      <h1 style={{ marginTop: '3vh', color: 'white', padding: '10px' }}> </h1>
 
-      {/* Contenedor con logo y QR */}
+      {/* Imagen grande arriba */}
+      <div className="bigImageContainer">
+        <img src="/global/contact/ucb.webp" alt="Imagen UCB" className="bigImage" />
+      </div>
       <div className="contactInfo">
         <div className="logoPanel">
           <img src="/global/contact/logo.png" alt="Logo" className="logoImage" />

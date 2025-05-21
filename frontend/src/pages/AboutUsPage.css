@@ -28,8 +28,8 @@
   
   /* Panel Imagen */
   .panelImagen {
-    width: 90%; /* Ocupa todo el ancho disponible */
-    height: 200px; /* Altura del panel grande */
+    width: 50%; /* Ocupa todo el ancho disponible */
+    height: 20%; /* Altura del panel grande */
     background-color: #555;
     display: flex;
     justify-content: center;
@@ -48,7 +48,7 @@
   /* Imagen Pequeña (Abajo a la derecha) */
   .imagenPequeña {
     width: 50%; /* Ajusta el tamaño del panel pequeño */
-    background-color: #96848494; /* Fondo más claro */
+    background-color: #1b1717; /* Fondo más claro */
     display: flex;
     justify-content: center;
     align-items: center;
