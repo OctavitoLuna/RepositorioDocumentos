@@ -52,5 +52,16 @@ const logSchema = new mongoose.Schema({
 
 const Log = mongoose.models.Log || mongoose.model("Log", logSchema);
 
+// Definir el esquema de forums (foros)
+const forumSchema = new mongoose.Schema({
+  nombre: String,
+  categoria: String,
+  fecha_creacion: { type: Date, default: Date.now },
+  id_autor: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  id_documents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Document' }]
+});
+
+const Forum = mongoose.models.Forum || mongoose.model("Forum", forumSchema);
+
 // Exportar los modelos para ser utilizados en otras partes del proyecto
-module.exports = { Document, Comment, User, Log };
+module.exports = { Document, Comment, User, Log, Forum };
