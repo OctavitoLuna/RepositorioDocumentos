@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./LoginDialog.css";
 
-export default function LoginDialog({ isOpen, closeDialog }) {
+// Añadimos onLoginSuccess a las props
+export default function LoginDialog({ isOpen, closeDialog, onLoginSuccess }) {
   const [username, setUsername] = useState(""); // Aquí va el correo
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -19,7 +20,7 @@ export default function LoginDialog({ isOpen, closeDialog }) {
       // Aquí asume que el backend devuelve token y user
       const { token, user } = response.data;
 
-      // Ejemplo: verificar rol admin
+      // Ejemplo: verificar rol admin (Mantenemos esta lógica)
       if (user.rol !== "admin") {
         setError("Solo usuarios admin pueden iniciar sesión");
         return;
@@ -30,7 +31,7 @@ export default function LoginDialog({ isOpen, closeDialog }) {
       // Puedes guardar el usuario en contexto o estado global aquí si quieres
 
       console.log("Login exitoso:", user);
-      closeDialog();
+      onLoginSuccess(); // <-- ¡IMPORTANTE! Llamar a onLoginSuccess aquí
     } catch (err) {
       setError(err.response?.data?.error || "Error en el login");
     }
@@ -41,6 +42,7 @@ export default function LoginDialog({ isOpen, closeDialog }) {
   return (
     <div className="loginDialog">
       <div className="loginDialogContent">
+        {/* El botón de cerrar está posicionado por CSS */}
         <button className="closeButton" onClick={closeDialog}>X</button>
 
         <div className="loginIconWrapper">
