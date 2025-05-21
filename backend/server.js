@@ -90,9 +90,10 @@ io.on('connection', (socket) => {
 
 // Conectar a MongoDB
 mongoose.connect("mongodb+srv://octavio:admin@repositoriodocumentos.xtfqiad.mongodb.net/?retryWrites=true&w=majority&appName=RepositorioDocumentos", {
-  useNewUrlParser: true,  
-  useUnifiedTopology: true, 
-  serverSelectionTimeoutMS: 500000,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 5000,
+  tlsAllowInvalidCertificates: true,
 })
 .then(() => console.log("Conectado a MongoDB"))
 .catch(err => console.error("Error conectando a MongoDB:", err));

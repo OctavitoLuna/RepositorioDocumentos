@@ -1,29 +1,39 @@
 import React from 'react';
-import LibrosCategoria from './LibrosCategoria';
 
-const ContenidoCategoria = ({ books, onSelectBook }) => {
-  return (
-    <div className="content-container">
-      <h2>Libros</h2>
-      <div className="books-list">
-        {books.map((book, index) => (
-          <LibrosCategoria key={index} book={book} onSelectBook={onSelectBook} />
-        ))}
-      </div>
-
-      <style jsx>{`
-        .content-container {
-          padding: 20px;
-        }
-
-        .books-list {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-          gap: 15px;
-        }
-      `}</style>
-    </div>
-  );
+const contenedorEstilos = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '12px',
 };
 
-export default ContenidoCategoria;
+const documentoEstilos = {
+  border: '1px solid #ccc',
+  padding: '10px',
+  borderRadius: '5px',
+  cursor: 'pointer',
+  marginBottom: '10px',
+};
+
+export default function ContenidoCategoria({ documentos, onDocumentoClick }) {
+  if (!documentos || documentos.length === 0) {
+    return <p>No hay documentos para mostrar.</p>;
+  }
+
+  return (
+    <div style={contenedorEstilos}>
+      {documentos.map(doc => (
+        <div
+          key={doc._id}
+          style={documentoEstilos}
+          onClick={() => onDocumentoClick ? onDocumentoClick(doc) : null}
+        >
+          <h3>{doc.titulo}</h3>
+          <p><strong>Autor:</strong> {doc.autor}</p>
+          <p><strong>Tipo:</strong> {doc.tipo || 'N/A'}</p>
+          <p><strong>Categoría:</strong> {doc.categoria || 'N/A'}</p>
+          <p><strong>Fecha subida:</strong> {doc.fecha_subida ? new Date(doc.fecha_subida).toLocaleDateString() : 'N/A'}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
