@@ -89,7 +89,7 @@ io.on('connection', (socket) => {
 });
 
 // Conectar a MongoDB
-mongoose.connect("mongodb+srv://leoibarralopez:admin@repositoriodocumentos.xtfqiad.mongodb.net/test?retryWrites=true&w=majority", {
+mongoose.connect("mongodb+srv://leandrocolque:1234@repositoriodocumentos.xtfqiad.mongodb.net/?retryWrites=true&w=majority&appName=RepositorioDocumentos", {
   useNewUrlParser: true,  
   useUnifiedTopology: true, 
   serverSelectionTimeoutMS: 500000,
@@ -102,6 +102,7 @@ const documentRoutes = require("./routes/documentRoutes");
 const commentRoutes = require("./routes/commentRoutes");
 const logRoutes = require("./routes/logRoutes");
 const userRoutes = require("./routes/userRoutes");
+const forumRoutes = require('./routes/forumRoutes');
 
 // Importar los modelos desde models.js (ya definidos en models.js)
 const { Document, Comment, User, Log } = require("./models/models");
@@ -111,6 +112,7 @@ app.use("/documents", documentRoutes);
 app.use("/comments", commentRoutes);
 app.use("/logs", logRoutes);
 app.use("/users", userRoutes);
+app.use('/api/foros', forumRoutes);
 
 // Endpoint para obtener todos los documentos
 app.get("/documents", (req, res) => {
