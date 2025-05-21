@@ -5,30 +5,84 @@ const { ApolloServer, gql } = require("apollo-server-express");
 const http = require("http");
 const { Server } = require("socket.io");
 
+// Importa rutas
+const documentRoutes = require("./routes/documentRoutes");
+const commentRoutes = require("./routes/commentRoutes");
+const logRoutes = require("./routes/logRoutes");
+const userRoutes = require("./routes/userRoutes");
+const authRoutes = require("./routes/authRoutes"); // <-- Asegúrate de tener esta ruta para login
+
+// Importa modelos (solo si los necesitas aquí)
+const { Document, Comment, User, Log } = require("./models/models");
+
 const app = express();
-const expressPort = 3001; // Puerto para el servidor Express
-const apolloPort = 3002; // Puerto para el servidor Apollo (GraphQL)
+const PORT_EXPRESS = 3001; // Express y REST
+const PORT_APOLLO = 3002;  // Apollo GraphQL
 
-// Middleware de Express
+// Middleware CORS
 app.use(cors({
-  origin: 'http://localhost:5173', // Permitir solicitudes solo desde este origen
-  methods: ['GET', 'POST'], // Métodos permitidos
-  allowedHeaders: ['Content-Type'], // Cabeceras permitidas
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-app.use(express.json()); // Middleware para analizar las solicitudes JSON
 
-// Crear servidor HTTP para Express y WebSocket
-const server = http.createServer(app);
+// Middleware para parsear JSON
+app.use(express.json());
 
-// Crear servidor de WebSocket (Socket.io)
-const io = new Server(server, {
-  cors: {
-    origin: 'http://localhost:5173',  // Permite solo este origen
-    methods: ['GET', 'POST'],  // Métodos permitidos
+// Registrar rutas REST
+app.use("/documents", documentRoutes);
+app.use("/comments", commentRoutes);
+app.use("/logs", logRoutes);
+app.use("/users", userRoutes);
+app.use("/auth", authRoutes); // <--- Ruta login
+
+// Endpoints REST extra (puedes moverlos a rutas si prefieres)
+app.get("/documents", (req, res) => {
+  Document.find({}, (err, documents) => {
+    if (err) return res.status(500).send("Error obteniendo documentos");
+    res.json(documents);
+  });
+});
+
+app.get("/documents/:id/comments", (req, res) => {
+  Comment.find({ documento_id: req.params.id }, (err, comments) => {
+    if (err) return res.status(500).send("Error obteniendo comentarios");
+    res.json(comments);
+  });
+});
+
+app.get("/documents/analysis/annual", async (req, res) => {
+  try {
+    const documents = await Document.aggregate([
+      { $group: { _id: { $year: "$fecha_subida" }, count: { $sum: 1 } } },
+      { $sort: { _id: 1 } }
+    ]);
+    res.json(documents);
+  } catch {
+    res.status(500).send("Error obteniendo el análisis anual");
   }
 });
 
-// Definir el esquema de GraphQL
+app.get("/documents/analysis/monthly", async (req, res) => {
+  try {
+    const documents = await Document.aggregate([
+      { $group: {
+          _id: {
+            year: { $year: "$fecha_subida" },
+            month: { $month: "$fecha_subida" }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { "_id.year": 1, "_id.month": 1 } }
+    ]);
+    res.json(documents);
+  } catch {
+    res.status(500).send("Error obteniendo el análisis mensual");
+  }
+});
+
+// Schema GraphQL
 const typeDefs = gql`
   type Document {
     _id: String
@@ -46,143 +100,72 @@ const typeDefs = gql`
   }
 `;
 
-// Resolver la consulta de GraphQL
+// Resolvers GraphQL
 const resolvers = {
   Query: {
     getDocumentStatsByYear: async () => {
       try {
-        console.log("Iniciando la consulta de estadísticas...");
-        const documents = await mongoose.model("Document").aggregate([
-          { $group: { _id: { $year: "$fecha_subida" }, count: { $sum: 1 } } }, // Agrupar por año
-          { $sort: { "_id": 1 } } // Ordenar por año ascendente
+        const documents = await Document.aggregate([
+          { $group: { _id: { $year: "$fecha_subida" }, count: { $sum: 1 } } },
+          { $sort: { "_id": 1 } }
         ]);
-        console.log("Estadísticas obtenidas:", documents);
-        return documents;
+        return documents.map(d => ({ year: d._id, count: d.count }));
       } catch (error) {
-        console.error("Error en la consulta de GraphQL:", error);
-        throw new Error('Error al obtener las estadísticas');
+        throw new Error("Error al obtener las estadísticas");
       }
     }
   }
 };
 
-// Crear servidor de Apollo
-const serverGraphQL = new ApolloServer({ typeDefs, resolvers });
+async function start() {
+  // Conectar MongoDB (sin opciones obsoletas)
+  await mongoose.connect("mongodb+srv://leoibarralopez:admin@repositoriodocumentos.xtfqiad.mongodb.net/test", {
+    tlsAllowInvalidCertificates: true,
+    serverSelectionTimeoutMS: 500000,
+  });
+  console.log("Conectado a MongoDB");
 
-// WebSocket: Manejo de las conexiones
-io.on('connection', (socket) => {
-  console.log('Cliente conectado');
-  
-  socket.on('requestDocumentStats', async () => {
-    try {
-      const documents = await mongoose.model("Document").find();
-      const data = documents.map(doc => doc.fecha_subida);
-      socket.emit('documentStats', data); // Emitir los datos al cliente
-    } catch (error) {
-      console.error("Error al obtener estadísticas de documentos:", error);
+  // Crear servidor HTTP (Express + WebSocket)
+  const serverHttp = http.createServer(app);
+
+  // Iniciar Apollo Server
+  const apolloServer = new ApolloServer({ typeDefs, resolvers });
+  await apolloServer.start();
+  apolloServer.applyMiddleware({ app });
+
+  // Socket.io
+  const io = new Server(serverHttp, {
+    cors: {
+      origin: 'http://localhost:5173',
+      methods: ['GET', 'POST']
     }
   });
 
-  socket.on('disconnect', () => {
-    console.log('Cliente desconectado');
+  io.on('connection', (socket) => {
+    console.log('Cliente conectado');
+
+    socket.on('requestDocumentStats', async () => {
+      try {
+        const documents = await Document.find();
+        const data = documents.map(doc => doc.fecha_subida);
+        socket.emit('documentStats', data);
+      } catch (error) {
+        console.error("Error al obtener estadísticas:", error);
+      }
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Cliente desconectado');
+    });
   });
-});
 
-// Conectar a MongoDB
-mongoose.connect("mongodb+srv://leoibarralopez:admin@repositoriodocumentos.xtfqiad.mongodb.net/test?retryWrites=true&w=majority", {
-  useNewUrlParser: true,  
-  useUnifiedTopology: true, 
-  serverSelectionTimeoutMS: 500000,
-})
-.then(() => console.log("Conectado a MongoDB"))
-.catch(err => console.error("Error conectando a MongoDB:", err));
-
-// Importar las rutas de documentos, comentarios, logs y usuarios
-const documentRoutes = require("./routes/documentRoutes");
-const commentRoutes = require("./routes/commentRoutes");
-const logRoutes = require("./routes/logRoutes");
-const userRoutes = require("./routes/userRoutes");
-
-// Importar los modelos desde models.js (ya definidos en models.js)
-const { Document, Comment, User, Log } = require("./models/models");
-
-// Usar las rutas
-app.use("/documents", documentRoutes);
-app.use("/comments", commentRoutes);
-app.use("/logs", logRoutes);
-app.use("/users", userRoutes);
-
-// Endpoint para obtener todos los documentos
-app.get("/documents", (req, res) => {
-  Document.find({}, (err, documents) => {
-    if (err) {
-      res.status(500).send("Error obteniendo documentos");
-      return;
-    }
-    res.json(documents); 
+  // Escuchar servidor HTTP con Express y WebSocket
+  serverHttp.listen(PORT_EXPRESS, () => {
+    console.log(`Servidor Express y WebSocket corriendo en http://localhost:${PORT_EXPRESS}`);
+    console.log(`GraphQL listo en http://localhost:${PORT_EXPRESS}${apolloServer.graphqlPath}`);
   });
-});
+}
 
-// Endpoint para obtener los comentarios de un documento
-app.get("/documents/:id/comments", (req, res) => {
-  Comment.find({ documento_id: req.params.id }, (err, comments) => {
-    if (err) {
-      res.status(500).send("Error obteniendo comentarios");
-      return;
-    }
-    res.json(comments); 
-  });
-});
-
-// Endpoint para obtener el análisis de documentos por año
-app.get("/documents/analysis/annual", async (req, res) => {
-  try {
-    const documents = await Document.aggregate([
-      { $group: { _id: { $year: "$fecha_subida" }, count: { $sum: 1 } } },
-      { $sort: { _id: 1 } }
-    ]);
-
-    res.json(documents); // Devuelve los documentos analizados por año
-  } catch (err) {
-    res.status(500).send("Error obteniendo el análisis anual");
-  }
-});
-
-// Endpoint para obtener el análisis de documentos por mes
-app.get("/documents/analysis/monthly", async (req, res) => {
-  try {
-    const documents = await Document.aggregate([
-      { $group: { 
-          _id: { 
-            year: { $year: "$fecha_subida" }, 
-            month: { $month: "$fecha_subida" } 
-          },
-          count: { $sum: 1 } 
-        } 
-      },
-      { $sort: { "_id.year": 1, "_id.month": 1 } }
-    ]);
-
-    res.json(documents); // Devuelve los documentos analizados por mes
-  } catch (err) {
-    res.status(500).send("Error obteniendo el análisis mensual");
-  }
-});
-
-// Iniciar el servidor de Apollo
-const startApolloServer = async () => {
-  await serverGraphQL.start();
-  serverGraphQL.applyMiddleware({ app });
-
-  // Iniciar el servidor HTTP de Apollo en el puerto 3002
-  http.createServer(app).listen(apolloPort, () => {
-    console.log(`Servidor GraphQL corriendo en http://localhost:${apolloPort}${serverGraphQL.graphqlPath}`);
-  });
-};
-
-startApolloServer();
-
-// Iniciar el servidor Express y WebSocket en el puerto 3001
-server.listen(expressPort, () => {
-  console.log(`Servidor Express y WebSocket ejecutándose en http://localhost:${expressPort}`);
+start().catch(err => {
+  console.error("Error iniciando servidor:", err);
 });

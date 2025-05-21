@@ -1,6 +1,8 @@
 // models/models.js
 const mongoose = require("mongoose");
 
+
+
 // Definir el esquema de documentos
 const documentSchema = new mongoose.Schema({
   titulo: String,
@@ -18,6 +20,7 @@ const documentSchema = new mongoose.Schema({
 
 // Verificar si el modelo ya existe
 const Document = mongoose.models.Document || mongoose.model("Document", documentSchema);
+
 
 // Definir el esquema de comentarios
 const commentSchema = new mongoose.Schema({
