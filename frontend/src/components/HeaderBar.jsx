@@ -51,8 +51,13 @@ export default function HeaderBar() {
       {/* Fondo delgado lateral derecho */}
       <div className="side-strip right-strip"></div>
 
+
+
+
+
       {/* Aquí pasamos el estado del diálogo y la función para cerrarlo */}
       <LoginDialog isOpen={isLoginDialogOpen} closeDialog={closeLoginDialog} />
     </header>
   );
 }
+// sypuestamente ya esta corregido

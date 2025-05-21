@@ -6,6 +6,8 @@ const registrarUsuario = async (req, res) => {
   try {
     const { nombre, apellido, correo, contraseña, rol } = req.body;
 
+    // verificiacion
+
     // Verificar si el correo ya está registrado
     const usuarioExistente = await User.findOne({ correo });
     if (usuarioExistente) {
