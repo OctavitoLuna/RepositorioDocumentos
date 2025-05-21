@@ -139,3 +139,37 @@
     font-weight: bold;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
+
+
+
+
+.foros-container {
+  display: flex;
+  flex-wrap: wrap; /* permite salto de línea */
+  gap: 16px;       /* espacio entre cards */
+  justify-content: flex-start;
+  padding: 10px 0;
+  width: 100%;     /* ocupa todo el ancho posible */
+  box-sizing: border-box;
+}
+
+.foro-card {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  padding: 16px;
+  
+  /* Cambié width fijo a un width responsivo */
+  flex: 1 1 220px; /* crece, encoge, base 220px */
+  max-width: 220px; /* no crece más allá de 220px */
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+
+.foro-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+}
