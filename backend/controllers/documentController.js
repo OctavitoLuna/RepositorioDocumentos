@@ -72,3 +72,28 @@ exports.deleteDocument = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+exports.searchDocuments = async (req, res) => {
+  try {
+    const { titulo, autor, tipo } = req.query;
+
+    let filtro = {};
+
+    if (titulo) {
+      filtro = { titulo: { $regex: titulo, $options: 'i' } };
+    } else if (autor) {
+      filtro = { autor: { $regex: autor, $options: 'i' } };
+    }
+
+    if (tipo) {
+      filtro.tipo = tipo;
+    }
+
+    const documents = await Document.find(filtro);
+    res.status(200).json(documents);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+

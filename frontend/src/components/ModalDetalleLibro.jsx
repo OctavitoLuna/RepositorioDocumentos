@@ -1,53 +1,39 @@
 import React from 'react';
 
-const ModalDetalleLibro = ({ book, onClose }) => {
+export default function ModalDetalleLibro({ documento, visible, onClose }) {
+  if (!visible) return null;
+
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <h2>{book.title}</h2>
-        <p><strong>Autor:</strong> {book.author}</p>
-        <p><strong>Fecha:</strong> {book.date}</p>
-        <p><strong>Categoría:</strong> {book.category}</p>
-        <p><strong>Descripción:</strong> {book.description}</p>
+    <div style={styles.overlay}>
+      <div style={styles.modal}>
+        <h2>{documento.titulo}</h2>
+        <p><strong>Autor:</strong> {documento.autor}</p>
+        <p><strong>Tipo:</strong> {documento.tipo || 'N/A'}</p>
+        <p><strong>Categoría:</strong> {documento.categoria || 'N/A'}</p>
+        <p><strong>Descripción:</strong> {documento.descripcion || 'Sin descripción'}</p>
+        <p><strong>Fecha subida:</strong> {documento.fecha_subida ? new Date(documento.fecha_subida).toLocaleDateString() : 'N/A'}</p>
         <button onClick={onClose}>Cerrar</button>
       </div>
-
-      <style jsx>{`
-        .modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0, 0, 0, 0.5);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .modal-content {
-          background: white;
-          padding: 20px;
-          border-radius: 10px;
-          max-width: 500px;
-          width: 100%;
-        }
-
-        button {
-          padding: 10px;
-          background-color: #007bff;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-        }
-
-        button:hover {
-          background-color: #0056b3;
-        }
-      `}</style>
     </div>
   );
-};
+}
 
-export default ModalDetalleLibro;
+const styles = {
+  overlay: {
+    position: 'fixed',
+    top: 0, left: 0, right: 0, bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 9999
+  },
+  modal: {
+    backgroundColor: 'white',
+    padding: '20px',
+    borderRadius: '8px',
+    width: '400px',
+    maxHeight: '80vh',
+    overflowY: 'auto'
+  }
+};
