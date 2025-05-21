@@ -1,17 +1,18 @@
 import React from 'react';
 
 const contenedorEstilos = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '12px',
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', // máximo 3 columnas con mínimo 300px
+  gap: '20px',
 };
 
 const documentoEstilos = {
-  border: '1px solid #ccc',
-  padding: '10px',
-  borderRadius: '5px',
+  backgroundColor: '#f5f5f5', // fondo claro que resalta
+  borderRadius: '10px',
+  padding: '20px',
+  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
   cursor: 'pointer',
-  marginBottom: '10px',
+  transition: 'transform 0.2s',
 };
 
 export default function ContenidoCategoria({ documentos, onDocumentoClick }) {
@@ -25,7 +26,9 @@ export default function ContenidoCategoria({ documentos, onDocumentoClick }) {
         <div
           key={doc._id}
           style={documentoEstilos}
-          onClick={() => onDocumentoClick ? onDocumentoClick(doc) : null}
+          onClick={() => onDocumentoClick && onDocumentoClick(doc)}
+          onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
+          onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
         >
           <h3>{doc.titulo}</h3>
           <p><strong>Autor:</strong> {doc.autor}</p>

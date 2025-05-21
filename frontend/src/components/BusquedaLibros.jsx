@@ -9,7 +9,6 @@ const BusquedaLibros = ({ onSearch }) => {
   };
 
   const handleSearchSubmit = () => {
-    // Llamamos a onSearch con el texto (aunque esté vacío)
     onSearch(searchTerm.trim());
   };
 
@@ -44,28 +43,42 @@ const BusquedaLibros = ({ onSearch }) => {
           padding: 10px;
           margin-bottom: 20px;
           gap: 10px;
+          max-width: 800px; /* Más ancha que antes */
+          margin-left: auto;
+          margin-right: auto;
         }
         .search-input {
-          width: 70%;
-          padding: 10px;
-          border-radius: 5px;
+          flex-grow: 1;
+          min-width: 0;
+          padding: 12px 15px;
+          border-radius: 25px;
           border: 1px solid #ccc;
+          font-size: 16px;
+          transition: border-color 0.3s ease;
+        }
+        .search-input:focus {
+          outline: none;
+          border-color:rgb(212, 109, 30);
+          box-shadow: 0 0 8px rgba(222, 65, 33, 0.5);
         }
         .search-button {
-          padding: 10px;
-          background-color: #007bff;
+          padding: 12px 18px;
+          background-color:rgb(232, 129, 26);
           color: white;
           border: none;
-          border-radius: 5px;
+          border-radius: 50%;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
+          font-size: 20px;
+          transition: background-color 0.3s ease;
         }
         .search-button:hover {
           background-color: #0056b3;
         }
       `}</style>
+
     </div>
   );
 };
