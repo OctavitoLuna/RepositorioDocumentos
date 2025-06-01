@@ -1,7 +1,6 @@
 // models/models.js
 const mongoose = require("mongoose");
-
-
+const bcrypt = require("bcryptjs");
 
 // Definir el esquema de documentos
 const documentSchema = new mongoose.Schema({
@@ -18,9 +17,7 @@ const documentSchema = new mongoose.Schema({
   versiones: [String]
 });
 
-// Verificar si el modelo ya existe
 const Document = mongoose.models.Document || mongoose.model("Document", documentSchema);
-
 
 // Definir el esquema de comentarios
 const commentSchema = new mongoose.Schema({
@@ -32,16 +29,59 @@ const commentSchema = new mongoose.Schema({
 
 const Comment = mongoose.models.Comment || mongoose.model("Comment", commentSchema);
 
-// Definir el esquema de usuarios
+// Definir el esquema de usuarios con encriptación y método de comparación
 const userSchema = new mongoose.Schema({
-  nombre: String,
-  apellido: String,
-  correo: String,
-  contraseña: String,
-  rol: String,
-  permisos: Array,
-  fecha_registro: Date
+  nombre: {
+    type: String,
+    required: true
+  },
+  apellido: {
+    type: String,
+    required: true
+  },
+  correo: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  contraseña: {
+    type: String,
+    required: true
+  },
+  rol: {
+    type: String,
+    enum: ['admin', 'investigador', 'visitante'],
+    default: 'visitante'
+  },
+  permisos: {
+    type: [String],
+    default: []
+  },
+  fecha_registro: {
+    type: Date,
+    default: Date.now
+  },
+  autenticacion_2fa: {
+    type: Boolean,
+    default: false
+  },
+  documentos_descargados: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Document'
+  }]
 });
+
+// Middleware para encriptar la contraseña antes de guardar
+userSchema.pre('save', async function(next) {
+  if (!this.isModified('contraseña')) return next();
+  this.contraseña = await bcrypt.hash(this.contraseña, 10);
+  next();
+});
+
+// Método para comparar contraseñas
+userSchema.methods.compararContraseña = async function(contraseña) {
+  return await bcrypt.compare(contraseña, this.contraseña);
+};
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 
@@ -66,5 +106,5 @@ const forumSchema = new mongoose.Schema({
 
 const Forum = mongoose.models.Forum || mongoose.model("Forum", forumSchema);
 
-// Exportar los modelos para ser utilizados en otras partes del proyecto
+// Exportar todos los modelos
 module.exports = { Document, Comment, User, Log, Forum };

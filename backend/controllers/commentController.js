@@ -1,10 +1,5 @@
-const mongoose = require("mongoose");
-const Comment = mongoose.model("Comment", new mongoose.Schema({
-  documento_id: mongoose.Schema.Types.ObjectId,
-  usuario_id: mongoose.Schema.Types.ObjectId,
-  comentario: String,
-  fecha_comentario: Date
-}));
+// commentController.js
+const { Comment } = require("../models/models");  // Importar modelo desde models.js
 
 // Crear un nuevo comentario
 exports.createComment = async (req, res) => {
