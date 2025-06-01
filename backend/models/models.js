@@ -1,8 +1,7 @@
-// models/models.js
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-// Definir el esquema de documentos
+// Documento
 const documentSchema = new mongoose.Schema({
   titulo: String,
   autor: String,
@@ -16,62 +15,31 @@ const documentSchema = new mongoose.Schema({
   comentarios: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
   versiones: [String]
 });
-
 const Document = mongoose.models.Document || mongoose.model("Document", documentSchema);
 
-// Definir el esquema de comentarios
+// Comentario
 const commentSchema = new mongoose.Schema({
   documento_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Document' },
   usuario_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   comentario: String,
   fecha_comentario: Date
 });
-
 const Comment = mongoose.models.Comment || mongoose.model("Comment", commentSchema);
 
-// Definir el esquema de usuarios con encriptación y método de comparación
+// Usuario
 const userSchema = new mongoose.Schema({
-  nombre: {
-    type: String,
-    required: true
-  },
-  apellido: {
-    type: String,
-    required: true
-  },
-  correo: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  contraseña: {
-    type: String,
-    required: true
-  },
-  rol: {
-    type: String,
-    enum: ['admin', 'investigador', 'visitante'],
-    default: 'visitante'
-  },
-  permisos: {
-    type: [String],
-    default: []
-  },
-  fecha_registro: {
-    type: Date,
-    default: Date.now
-  },
-  autenticacion_2fa: {
-    type: Boolean,
-    default: false
-  },
-  documentos_descargados: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Document'
-  }]
+  nombre: { type: String, required: true },
+  apellido: { type: String, required: true },
+  correo: { type: String, required: true, unique: true },
+  contraseña: { type: String, required: true },
+  rol: { type: String, enum: ['admin', 'investigador', 'visitante'], default: 'visitante' },
+  permisos: { type: [String], default: [] },
+  fecha_registro: { type: Date, default: Date.now },
+  autenticacion_2fa: { type: Boolean, default: false },
+  documentos_descargados: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Document' }]
 });
 
-// Middleware para encriptar la contraseña antes de guardar
+// Encriptar contraseña antes de guardar
 userSchema.pre('save', async function(next) {
   if (!this.isModified('contraseña')) return next();
   this.contraseña = await bcrypt.hash(this.contraseña, 10);
@@ -85,17 +53,16 @@ userSchema.methods.compararContraseña = async function(contraseña) {
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 
-// Definir el esquema de logs
+// Log
 const logSchema = new mongoose.Schema({
   usuario_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   accion: String,
   ip: String,
   fecha_accion: Date
 });
-
 const Log = mongoose.models.Log || mongoose.model("Log", logSchema);
 
-// Definir el esquema de forums (foros)
+// Forum (Foro)
 const forumSchema = new mongoose.Schema({
   nombre: String,
   categoria: String,
@@ -103,8 +70,6 @@ const forumSchema = new mongoose.Schema({
   id_autor: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   id_documents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Document' }]
 });
-
 const Forum = mongoose.models.Forum || mongoose.model("Forum", forumSchema);
 
-// Exportar todos los modelos
 module.exports = { Document, Comment, User, Log, Forum };

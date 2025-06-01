@@ -1,9 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/models');
+const bcrypt = require('bcryptjs');  // usa bcryptjs para mantener consistencia
 
-const bcrypt = require('bcrypt');
-
-// Crear usuario
 exports.createUser = async (req, res) => {
   const { nombre, apellido, correo, contraseña, rol } = req.body;
   if (!nombre || !apellido || !correo || !contraseña || !rol) {
@@ -28,7 +26,6 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// Obtener todos los usuarios
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
@@ -38,7 +35,6 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-// Obtener usuario por ID
 exports.getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -49,7 +45,6 @@ exports.getUserById = async (req, res) => {
   }
 };
 
-// Actualizar usuario
 exports.updateUser = async (req, res) => {
   try {
     const { nombre, apellido, correo, contraseña, rol, permisos, fecha_registro } = req.body;
@@ -59,15 +54,7 @@ exports.updateUser = async (req, res) => {
     const hash = await bcrypt.hash(contraseña, 10);
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
-      {
-        nombre,
-        apellido,
-        correo,
-        contraseña: hash,
-        rol,
-        permisos,
-        fecha_registro,
-      },
+      { nombre, apellido, correo, contraseña: hash, rol, permisos, fecha_registro },
       { new: true }
     );
     if (!updatedUser) return res.status(404).json({ message: "Usuario no encontrado" });
@@ -77,7 +64,6 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-// Eliminar usuario
 exports.deleteUser = async (req, res) => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
@@ -88,33 +74,28 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-// Login usuario con JWT
 exports.loginUsuario = async (req, res) => {
-  const { usuario, contrasenia } = req.body;
-  if (!usuario || !contrasenia) {
-    return res.status(400).json({ mensaje: 'Debe proporcionar usuario y contraseña', encontrado: 0 });
+  const { correo, contraseña } = req.body;
+  console.log("Datos recibidos:", { correo, contraseña });
+  if (!correo || !contraseña) {
+    return res.status(400).json({ mensaje: 'Debe proporcionar correo y contraseña', encontrado: 0 });
   }
   try {
-    const user = await User.findOne({ nombre: usuario });
+    const user = await User.findOne({ correo });
     if (!user) {
       return res.status(404).json({ mensaje: 'Usuario no encontrado', encontrado: 0 });
     }
-    const match = await bcrypt.compare(contrasenia, user.contraseña);
+    console.log("Usuario encontrado:", user);
+    const match = await bcrypt.compare(contraseña, user.contraseña);
+    console.log("Resultado comparación:", match);
     if (!match) {
       return res.status(401).json({ mensaje: 'Contraseña incorrecta', encontrado: 0 });
     }
-
-    // Generar token JWT
     const token = jwt.sign(
-      {
-        id: user._id,
-        nombre: user.nombre,
-        rol: user.rol,
-      },
-      process.env.JWT_SECRET,
+      { id: user._id, rol: user.rol },
+      process.env.JWT_SECRET || "clave_secreta",
       { expiresIn: '8h' }
     );
-
     return res.status(200).json({
       mensaje: 'Usuario autenticado',
       encontrado: 1,
@@ -126,10 +107,10 @@ exports.loginUsuario = async (req, res) => {
         rol: user.rol,
         permisos: user.permisos,
       },
-      token, // Token JWT para autenticación
+      token,
     });
   } catch (error) {
     console.error('Error en loginUsuario:', error);
-    return res.status(500).json({ mensaje: 'Usuario no encontrado', encontrado: 0 });
+    return res.status(500).json({ mensaje: 'Error interno', encontrado: 0 });
   }
 };

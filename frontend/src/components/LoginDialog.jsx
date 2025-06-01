@@ -104,18 +104,19 @@ const InicioSesion = ({ onLogin, onClose }) => {
     }
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:3001/usuarios/login", {
+      const res = await fetch("http://localhost:3001/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ usuario, contrasenia }),
+        body: JSON.stringify({ correo: usuario.trim(), contraseña: contrasenia.trim() }),
       });
+      
       const data = await res.json();
-      if (res.ok && data.encontrado === 1) {
+      if (res.ok) {
         setMensaje("¡Sesión iniciada correctamente!");
-        onLogin(data.usuario);
+        onLogin(data.user);  // <- usa "user" que devuelve el backend
         setTimeout(() => setIsVisible(false), 1500);
       } else {
-        setMensaje(data.mensaje || "Credenciales incorrectas");
+        setMensaje(data.error || data.mensaje || "Credenciales incorrectas");
       }
     } catch {
       setMensaje("Error de conexión con el servidor");

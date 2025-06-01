@@ -1,5 +1,4 @@
-// logController.js
-const { Log } = require("../models/models");  // Importar modelo ya definido
+const { Log } = require("../models/models");
 
 // Crear un nuevo log
 exports.createLog = async (req, res) => {
