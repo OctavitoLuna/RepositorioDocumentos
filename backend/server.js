@@ -103,7 +103,6 @@ const typeDefs = gql`
     getDocumentStatsByYear: [DocumentStats]
   }
 `;
-
 // Resolvers GraphQL
 const resolvers = {
   Query: {
@@ -165,8 +164,8 @@ async function start() {
 
   // Escuchar servidor HTTP con Express y WebSocket
   serverHttp.listen(PORT_EXPRESS, () => {
-    console.log(`Servidor Express y WebSocket corriendo en http://localhost:${PORT_EXPRESS}`);
-    console.log(`GraphQL listo en http://localhost:${PORT_EXPRESS}${apolloServer.graphqlPath}`);
+    console.log(`Servidor Express y WebSocket corriendo en http://localhost:${PORT_EXPRESS}`); // Corregido
+    console.log(`GraphQL listo en http://localhost:${PORT_EXPRESS}${apolloServer.graphqlPath}`); // Corregido
   });
 }
 

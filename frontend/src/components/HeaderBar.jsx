@@ -1,23 +1,43 @@
 import './HeaderBar.css';
 import React, { useState, useEffect } from 'react';
-import LoginDialog from './LoginDialog'; // Importamos el LoginDialog
+import InicioSesion from './LoginDialog.jsx'; // Asegúrate de que la extensión sea correcta
 import { useTheme } from '../context/ThemeContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function HeaderBar() {
+  const navigate = useNavigate();
   const [isLoginDialogOpen, setLoginDialogOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState(null);
   const [showAdminOptions, setShowAdminOptions] = useState(false);
-  const baseHeight = 120; // Asegúrate que esta variable sea la que controla la altura de tu header
+  const baseHeight = 120;
   const { toggleTheme } = useTheme();
 
   // useEffect para verificar el estado de login al cargar la página
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      // Opcional: Aquí podrías añadir una validación del token con tu backend
-      setIsLoggedIn(true);
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        setLoggedInUser(JSON.parse(storedUser));
+      } catch (e) {
+        console.error("Error parseando usuario de localStorage:", e);
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+      }
     }
   }, []);
+
+  const getRoleName = (rolString) => {
+    switch (rolString) {
+      case 'admin':
+        return "Administrador";
+      case 'investigador':
+        return "Investigador";
+      case 'visitante':
+        return "Visitante";
+      default:
+        return "Usuario";
+    }
+  };
 
   const handleThemeClick = () => {
     console.log('[CLICK] Icono izquierdo presionado');
@@ -26,42 +46,48 @@ export default function HeaderBar() {
 
   const openLoginDialog = () => {
     setLoginDialogOpen(true);
-    setShowAdminOptions(false); // Asegúrate de que el dropdown se oculte si se abre el diálogo de login
+    setShowAdminOptions(false);
   };
 
   const closeLoginDialog = () => {
     setLoginDialogOpen(false);
   };
 
-  const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
+  const handleLoginSuccess = (user, token) => {
+    console.log("HeaderBar: Login exitoso. Usuario:", user, "Token:", token);
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    setLoggedInUser(user);
     setLoginDialogOpen(false);
-    setShowAdminOptions(true); // Mostrar las opciones de administración inmediatamente después del login
-    console.log("Inicio de sesión exitoso!");
+    setShowAdminOptions(true); // Muestra el dropdown inmediatamente
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    setShowAdminOptions(false);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setLoggedInUser(null);
+    setShowAdminOptions(false); // Oculta el dropdown al cerrar sesión
     console.log("Sesión cerrada.");
-    localStorage.removeItem("token"); // Remover el token del localStorage
-    // Puedes redirigir al usuario o hacer otras limpiezas aquí
+    navigate('/');
   };
 
-  // Función principal para el click en el ícono de la persona
   const handleLoginIconClick = () => {
-    if (isLoggedIn) {
-      // Si está logueado, alternar la visibilidad del dropdown de opciones de administración
+    if (loggedInUser) {
       setShowAdminOptions(prev => !prev);
     } else {
-      // Si no está logueado, abrir el diálogo de login
       openLoginDialog();
     }
   };
 
+  const handlePersonalizarPerfilClick = () => {
+    console.log('Navegar a Personalizar Perfil');
+    setShowAdminOptions(false); // Cierra el dropdown al hacer clic
+    // Aquí podrías navegar a una ruta de perfil, por ejemplo:
+    // navigate('/perfil');
+  };
+
   return (
     <header className="header-bar" style={{ height: `${baseHeight}px` }}>
-      {/* Fondo delgado lateral izquierdo */}
       <div className="side-strip left-strip" />
 
       <div className="icon left-icon" onClick={handleThemeClick}>
@@ -73,52 +99,57 @@ export default function HeaderBar() {
         />
       </div>
 
-      {/* Título centrado con barra */}
       <div className="center-bar">
         <h1 className="header-title">Repositorio de Documentos Históricos</h1>
       </div>
 
-      {/* Ícono derecho de la persona (siempre el mismo) */}
       <div className="icon right-icon" onClick={handleLoginIconClick}>
         <div className="background" />
         <img
-          src="/global/login.png" // Siempre se muestra el ícono de la persona
+          src="/global/login.png"
           alt="User Icon"
         />
       </div>
 
-      {/* Fondo delgado lateral derecho */}
       <div className="side-strip right-strip"></div>
 
-      {/* Diálogo de Login */}
-      <LoginDialog
+      <InicioSesion
         isOpen={isLoginDialogOpen}
-        closeDialog={closeLoginDialog}
-        onLoginSuccess={handleLoginSuccess}
+        onClose={closeLoginDialog}
+        onLogin={handleLoginSuccess}
       />
 
-      {/* Dropdown de opciones de administración y cerrar sesión */}
-      {isLoggedIn && showAdminOptions && (
+      {loggedInUser && showAdminOptions && (
         <div className="admin-options-dropdown">
-          <div className="admin-option-button" onClick={() => console.log('Navegar a Administrar Usuarios')}>
-            Administrar Usuarios
+          <div className="user-info-display">
+            {loggedInUser.nombre} ({getRoleName(loggedInUser.rol)})
           </div>
-          <div className="admin-option-button" onClick={() => console.log('Navegar a Administrar Foros')}>
-            Administrar Foros
+          {/* Botón Personalizar Perfil para todos los usuarios logueados */}
+          <div className="admin-option-button" onClick={handlePersonalizarPerfilClick}>
+            Personalizar Perfil
           </div>
+          {loggedInUser.rol === 'admin' && ( // Solo para admins
+            <>
+              {/* Puedes mantener opciones específicas de admin si las necesitas */}
+              {/* <div className="admin-option-button" onClick={() => {
+                console.log('Navegar a Administrar Usuarios');
+                setShowAdminOptions(false);
+              }}>
+                Administrar Usuarios
+              </div>
+              <div className="admin-option-button" onClick={() => {
+                console.log('Navegar a Administrar Foros');
+                setShowAdminOptions(false);
+              }}>
+                Administrar Foros
+              </div> */}
+            </>
+          )}
           <div className="admin-option-button logout-button" onClick={handleLogout}>
             Cerrar Sesión
           </div>
         </div>
       )}
-
-      {/* HE ELIMINADO EL BLOQUE <nav> AQUÍ
-          PORQUE LAS PALABRAS "NOSOTROS", "FOROS", ETC.
-          PARECEN ESTAR YA EN TU IMAGEN DE FONDO DEL HEADERBAR
-          O SON PARTE DEL DISEÑO POR OTRO CSS.
-          SI NO SON PARTE DEL DISEÑO ESTÁTICO Y NECESITAS QUE SEAN ENLACES INTERACTIVOS,
-          AVÍSAME Y REINCORPORAREMOS EL <nav> CON LOS AJUSTES DE CSS NECESARIOS. */}
-
     </header>
   );
 }
