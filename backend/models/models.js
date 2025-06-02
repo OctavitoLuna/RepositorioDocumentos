@@ -13,7 +13,13 @@ const documentSchema = new mongoose.Schema({
   usuario_responsable: mongoose.Schema.Types.ObjectId,
   fecha_subida: Date,
   comentarios: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
-  versiones: [String]
+  versiones: [String],
+  ratings: [
+    {
+      usuario_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+      valor: { type: Number, min: 1, max: 5, required: true },
+    }
+  ]
 });
 const Document = mongoose.models.Document || mongoose.model("Document", documentSchema);
 
@@ -22,10 +28,10 @@ const commentSchema = new mongoose.Schema({
   documento_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Document' },
   usuario_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   comentario: String,
-  fecha_comentario: Date
+  fecha_comentario: { type: Date, default: Date.now },
+  parent_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Comment', default: null } // nuevo campo
 });
 const Comment = mongoose.models.Comment || mongoose.model("Comment", commentSchema);
-
 // Usuario
 const userSchema = new mongoose.Schema({
   nombre: { type: String, required: true },
@@ -72,4 +78,14 @@ const forumSchema = new mongoose.Schema({
 });
 const Forum = mongoose.models.Forum || mongoose.model("Forum", forumSchema);
 
-module.exports = { Document, Comment, User, Log, Forum };
+const collectionSchema = new mongoose.Schema({
+  nombre: { type: String, required: true },
+  descripcion: { type: String },
+  usuario_creador: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  documentos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Document' }],
+  fecha_creacion: { type: Date, default: Date.now }
+});
+
+const Collection = mongoose.models.Collection || mongoose.model('Collection', collectionSchema);
+
+module.exports = { Document, Comment, User, Log, Forum, Collection};

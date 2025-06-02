@@ -3,6 +3,7 @@ import BusquedaLibros from '../components/BusquedaLibros';
 import FiltroLibro from '../components/FiltroLibro';
 import ContenidoCategoria from '../components/ContenidoCategoria';
 import ModalDetalleLibro from '../components/ModalDetalleLibro';
+import CollectionsModal from '../components/collection/CollectionsModal'; // nuevo componente para colecciones
 
 const BibliotecaPage = () => {
   const [resultados, setResultados] = useState([]);
@@ -10,6 +11,7 @@ const BibliotecaPage = () => {
 
   const [documentoSeleccionado, setDocumentoSeleccionado] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [showCollectionsModal, setShowCollectionsModal] = useState(false);
 
   const obtenerTodosDocumentos = async () => {
     try {
@@ -63,20 +65,44 @@ const BibliotecaPage = () => {
 
   return (
     <div style={styles.pageContainer}>
-      
       <div style={styles.contentWrapper}>
-        
-        <FiltroLibro onFilterChange={setFiltro} />
-        <BusquedaLibros onSearch={handleSearch} />
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <FiltroLibro onFilterChange={setFiltro} />
+          <BusquedaLibros onSearch={handleSearch} />
+          <button
+            onClick={() => setShowCollectionsModal(true)}
+            style={{
+              backgroundColor: '#D46D1E',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              padding: '10px 20px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              marginLeft: '15px',
+            }}
+          >
+            Mis Colecciones
+          </button>
+        </div>
+
         {resultados.length === 0 ? (
           <p style={styles.noResultsText}>No hay documentos para mostrar.</p>
         ) : (
           <ContenidoCategoria documentos={resultados} onDocumentoClick={handleSelectBook} />
         )}
+
         <ModalDetalleLibro
           documento={documentoSeleccionado}
           visible={modalVisible}
           onClose={handleCloseModal}
+        />
+
+        <CollectionsModal
+          visible={showCollectionsModal}
+          onClose={() => setShowCollectionsModal(false)}
+          usuarioId={'68150275b0a432b34c21344d'} // cambia a usuario actual si tienes
+          onSelectDocument={handleSelectBook} // para abrir detalle libro desde colección
         />
       </div>
     </div>

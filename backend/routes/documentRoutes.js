@@ -18,6 +18,8 @@ router.put("/:id", documentController.updateDocument);
 // Eliminar un documento
 router.delete("/:id", documentController.deleteDocument);
 
+router.post('/:id/rating', documentController.rateDocument);         // Agregar o actualizar rating
+router.get('/:id/rating-summary', documentController.getRatingSummary); // Obtener promedio y total
 
 
 

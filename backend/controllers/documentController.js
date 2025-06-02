@@ -86,3 +86,51 @@ exports.searchDocuments = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+exports.rateDocument = async (req, res) => {
+  const { id } = req.params;
+  const { usuario_id, valor } = req.body;
+
+  if (!usuario_id || !valor || valor < 1 || valor > 5) {
+    return res.status(400).json({ error: 'Datos inválidos' });
+  }
+
+  try {
+    const doc = await Document.findById(id);
+    if (!doc) return res.status(404).json({ error: 'Documento no encontrado' });
+
+    const existingRating = doc.ratings.find(r => r.usuario_id.toString() === usuario_id);
+
+    if (existingRating) {
+      existingRating.valor = valor; // actualiza rating
+    } else {
+      doc.ratings.push({ usuario_id, valor }); // nuevo rating
+    }
+
+    await doc.save();
+    res.json({ message: 'Calificación registrada correctamente' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+exports.getRatingSummary = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const doc = await Document.findById(id).select('ratings');
+    if (!doc) return res.status(404).json({ error: 'Documento no encontrado' });
+
+    const total = doc.ratings.length;
+    const promedio = total > 0
+      ? doc.ratings.reduce((sum, r) => sum + r.valor, 0) / total
+      : 0;
+
+    res.json({
+      promedio: promedio.toFixed(2),
+      total
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
