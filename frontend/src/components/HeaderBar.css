@@ -53,12 +53,10 @@
 
 .left-icon {
   left: 3vw;
-  /* background-color: rgba(255, 255, 255, 0); */ /* Comentado para producción */
 }
 
 .right-icon {
   right: 3vw;
-  /* background-color: rgba(24, 24, 24, 0); */ /* Comentado para producción */
 }
 
 .center-bar {
@@ -98,22 +96,33 @@
 /* --- ESTILOS PARA EL DROPDOWN DE OPCIONES DE ADMINISTRACIÓN --- */
 .admin-options-dropdown {
   position: absolute;
-  /* Posicionar el dropdown justo debajo y a la derecha del ícono de login */
-  top: calc(100% - 20px); /* 100% de la altura del header-bar, menos un ajuste. Ajusta el -20px si es necesario */
-  right: 2vw; /* Ajusta este valor para alinear con tu ícono de login */
+  /* Ajusta 'top' para que esté justo debajo del icono de login */
+  top: 100px; /* Puedes ajustar este valor si es necesario, pero con el z-index del modal no debería haber conflicto */
+  right: 3vw;
   
   display: flex;
   flex-direction: column;
-  gap: 5px; /* Espacio entre los botones */
+  gap: 5px;
 
-  background-color: rgba(33, 30, 28, 0.95); /* Fondo oscuro semitransparente */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* Borde sutil */
+  background-color: rgba(33, 30, 28, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   padding: 10px;
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4); /* Sombra para efecto flotante */
-  z-index: 900; /* Asegura que esté sobre el contenido principal */
-  min-width: 180px; /* Ancho mínimo del dropdown */
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4);
+  z-index: 900; /* Un z-index alto, pero menor que el del modal de login */
+  min-width: 180px;
   text-align: center;
+}
+
+.user-info-display {
+  padding: 10px 15px;
+  color: rgb(231, 231, 231);
+  font-family: Arial, sans-serif;
+  font-size: 1em;
+  font-weight: bold;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 5px;
+  cursor: default;
 }
 
 .admin-option-button {
@@ -134,16 +143,9 @@
 }
 
 .logout-button {
-  background-color: #dc3545; /* Color rojo para el botón de cerrar sesión */
+  background-color: #dc3545;
 }
 
 .logout-button:hover {
   background-color: #c82333;
 }
-
-/* HE ELIMINADO LOS ESTILOS .header-nav, .header-nav ul, .header-nav li AQUÍ
-   PORQUE PARECE QUE LOS ELEMENTOS "NOSOTROS", "FOROS", ETC.
-   SON PARTE DE TU IMAGEN DE FONDO DEL HEADERBAR O YA ESTÁN POSICIONADOS POR OTRO CSS.
-   SI LOS NECESITAS COMO ELEMENTOS INTERACTIVOS CON ESTILOS CSS PROPIOS,
-   DEBERÁS REINCORPORAR ESOS ESTILOS Y ASEGURARTE DE QUE NO SE SUPERPONGAN
-   CON OTROS ELEMENTOS DEL HEADER. */

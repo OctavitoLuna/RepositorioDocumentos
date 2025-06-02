@@ -1,20 +1,13 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const userController = require("../controllers/userController");
+const userController = require('../controllers/userController');
+const { verifyToken, isAdmin } = require('../middlewares/authMiddleware');
 
-// Crear un nuevo usuario
-router.post("/", userController.createUser);
-
-// Obtener todos los usuarios
-router.get("/", userController.getAllUsers);
-
-// Obtener un usuario por su ID
-router.get("/:id", userController.getUserById);
-
-// Actualizar un usuario
-router.put("/:id", userController.updateUser);
-
-// Eliminar un usuario
-router.delete("/:id", userController.deleteUser);
+router.post('/', verifyToken, isAdmin, userController.createUser);
+//router.post('/', userController.createUser);
+router.get('/', verifyToken, isAdmin, userController.getAllUsers);
+router.get('/:id', verifyToken, isAdmin, userController.getUserById);
+router.put('/:id', verifyToken, isAdmin, userController.updateUser);
+router.delete('/:id', verifyToken, isAdmin, userController.deleteUser);
 
 module.exports = router;

@@ -1,10 +1,4 @@
-const mongoose = require("mongoose");
-const Log = mongoose.model("Log", new mongoose.Schema({
-  usuario_id: mongoose.Schema.Types.ObjectId,
-  accion: String,
-  ip: String,
-  fecha_accion: Date
-}));
+const { Log } = require("../models/models");
 
 // Crear un nuevo log
 exports.createLog = async (req, res) => {

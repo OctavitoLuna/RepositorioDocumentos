@@ -1,17 +1,5 @@
-const mongoose = require("mongoose");
-const Document = mongoose.model("Document", new mongoose.Schema({
-  titulo: String,
-  autor: String,
-  descripcion: String,
-  fecha: Date,
-  tipo: String,
-  categoria: String,
-  archivo_url: String,
-  usuario_responsable: mongoose.Schema.Types.ObjectId,
-  fecha_subida: Date,
-  comentarios: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
-  versiones: [String]
-}));
+// documentController.js
+const { Document } = require("../models/models");  // Importa el modelo desde el archivo central
 
 // Crear un nuevo documento
 exports.createDocument = async (req, res) => {
@@ -73,6 +61,7 @@ exports.deleteDocument = async (req, res) => {
   }
 };
 
+// Búsqueda de documentos
 exports.searchDocuments = async (req, res) => {
   try {
     const { titulo, autor, tipo } = req.query;
@@ -80,9 +69,11 @@ exports.searchDocuments = async (req, res) => {
     let filtro = {};
 
     if (titulo) {
-      filtro = { titulo: { $regex: titulo, $options: 'i' } };
-    } else if (autor) {
-      filtro = { autor: { $regex: autor, $options: 'i' } };
+      filtro.titulo = { $regex: titulo, $options: 'i' };
+    }
+
+    if (autor) {
+      filtro.autor = { $regex: autor, $options: 'i' };
     }
 
     if (tipo) {
@@ -95,5 +86,3 @@ exports.searchDocuments = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
-
-

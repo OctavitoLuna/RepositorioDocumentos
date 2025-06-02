@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -10,10 +12,10 @@ const documentRoutes = require("./routes/documentRoutes");
 const commentRoutes = require("./routes/commentRoutes");
 const logRoutes = require("./routes/logRoutes");
 const userRoutes = require("./routes/userRoutes");
-const authRoutes = require("./routes/authRoutes"); // <-- Asegúrate de tener esta ruta para login
+const authRoutes = require("./routes/authRoutes"); // Ruta login
 const forumRoutes = require('./routes/forumRoutes');
 
-// Importa modelos (solo si los necesitas aquí)
+// Importa modelos (si los necesitas aquí)
 const { Document, Comment, User, Log } = require("./models/models");
 
 const app = express();
@@ -35,10 +37,10 @@ app.use("/documents", documentRoutes);
 app.use("/comments", commentRoutes);
 app.use("/logs", logRoutes);
 app.use("/users", userRoutes);
-app.use("/auth", authRoutes); // <--- Ruta login
+app.use("/auth", authRoutes); // Ruta login
 app.use('/api/foros', forumRoutes);
 
-// Endpoints REST extra (puedes moverlos a rutas si prefieres)
+// Endpoints REST adicionales (puedes mover a rutas si quieres)
 app.get("/documents", (req, res) => {
   Document.find({}, (err, documents) => {
     if (err) return res.status(500).send("Error obteniendo documentos");
@@ -101,7 +103,6 @@ const typeDefs = gql`
     getDocumentStatsByYear: [DocumentStats]
   }
 `;
-
 // Resolvers GraphQL
 const resolvers = {
   Query: {
@@ -120,8 +121,8 @@ const resolvers = {
 };
 
 async function start() {
-  // Conectar MongoDB (sin opciones obsoletas)
-  await mongoose.connect("mongodb+srv://leoibarralopez:admin@repositoriodocumentos.xtfqiad.mongodb.net/test", {
+  // Conectar MongoDB usando URI de .env
+  await mongoose.connect(process.env.MONGODB_URI, {
     tlsAllowInvalidCertificates: true,
     serverSelectionTimeoutMS: 500000,
   });
@@ -163,8 +164,8 @@ async function start() {
 
   // Escuchar servidor HTTP con Express y WebSocket
   serverHttp.listen(PORT_EXPRESS, () => {
-    console.log(`Servidor Express y WebSocket corriendo en http://localhost:${PORT_EXPRESS}`);
-    console.log(`GraphQL listo en http://localhost:${PORT_EXPRESS}${apolloServer.graphqlPath}`);
+    console.log(`Servidor Express y WebSocket corriendo en http://localhost:${PORT_EXPRESS}`); // Corregido
+    console.log(`GraphQL listo en http://localhost:${PORT_EXPRESS}${apolloServer.graphqlPath}`); // Corregido
   });
 }
 
