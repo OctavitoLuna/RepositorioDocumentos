@@ -1,0 +1,480 @@
+/* Colores de la paleta */
+:root {
+    --primary-dark-bg: rgba(27, 18, 3, 0.98); /* Fondo principal del panel */
+    --secondary-dark-bg: #1A1A1A; /* Fondo de la tabla y modal */
+    --tertiary-dark-bg: #2C2C2C; /* Filas pares de la tabla, inputs */
+    --accent-oak: #5A3A22; /* Nuevo color de acento: Café Roble */
+    --accent-oak-light: #8B4513; /* Versión más clara para hover/acento */
+    --primary-blue-button: #3F51B5; /* Botones principales (Crear, Actualizar) */
+    --primary-blue-button-hover: #303F9F; /* Hover de botones principales */
+    --text-light: #FAFAFA; /* Texto principal claro */
+    --text-secondary: #BDBDBD; /* Texto secundario, placeholders */
+    --border-subtle: rgba(255, 255, 255, 0.15); /* Bordes sutiles */
+    --border-input: #616161; /* Borde de inputs */
+    --shadow-strong: rgba(0, 0, 0, 0.7); /* Sombra fuerte */
+    --error-red: #D32F2F; /* Rojo para errores y eliminar */
+    --error-red-hover: #C62828; /* Hover de rojo */
+    --success-green: #4CAF50; /* Verde para éxito */
+    --success-green-hover: #43A047; /* Hover de verde */
+    --cancel-button-bg: #757575; /* Gris para cancelar */
+    --cancel-button-hover: #616161; /* Hover de gris */
+}
+
+/* Contenedor principal del panel */
+.admin-user-panel-container {
+    background-color: var(--primary-dark-bg);
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 15px 40px var(--shadow-strong);
+    max-width: 1200px; /* Reducido un 30% (1200px * 0.7) */
+    width: 90%;
+    margin: 150px auto 40px auto; /* Ajuste clave: Empieza más abajo del HeaderBar */
+    position: relative;
+    z-index: 5; /* Asegura que esté por encima del fondo 3D */
+    color: var(--text-light);
+    border: 2px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    animation: fadeInScale 0.8s ease-out; /* Animación de entrada */
+}
+
+/* Animación de entrada */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Título del panel */
+.admin-user-panel-container h2 {
+    text-align: center;
+    color: var(--accent-oak-light); /* Color roble claro para el título */
+    margin-bottom: 40px;
+    font-size: 2.8rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.9);
+    letter-spacing: 1px;
+}
+
+/* Barra superior: búsqueda y botón añadir */
+.admin-user-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+    gap: 25px;
+    width: 100%;
+}
+
+.admin-user-panel-header input {
+    flex-grow: 1;
+    padding: 15px 22px;
+    border: 1px solid var(--border-input);
+    border-radius: 12px;
+    font-size: 1.15rem;
+    background-color: var(--tertiary-dark-bg);
+    color: var(--text-light);
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+}
+
+.admin-user-panel-header input::placeholder {
+    color: var(--text-secondary);
+}
+
+.admin-user-panel-header input:focus {
+    border-color: var(--accent-oak-light); /* Color roble claro al enfocar */
+    box-shadow: 0 0 15px rgba(139, 69, 19, 0.8); /* Sombra de enfoque con el nuevo color */
+    outline: none;
+}
+
+.admin-user-panel-header button.create-user-button {
+    padding: 15px 35px;
+    background-color: var(--primary-blue-button); /* Color azul para este botón */
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1.3rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.admin-user-panel-header button.create-user-button:hover {
+    background-color: var(--primary-blue-button-hover); /* Hover del color azul */
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Tabla de usuarios */
+.users-list {
+    width: 100%;
+    overflow-x: auto; /* Permite scroll horizontal en pantallas pequeñas */
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 35px;
+    background-color: var(--secondary-dark-bg);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+.user-table th,
+.user-table td {
+    text-align: left;
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--table-border);
+    color: var(--text-light);
+    font-size: 1.05rem;
+}
+
+.user-table th {
+    background-color: var(--table-header-bg);
+    font-weight: bold;
+    color: var(--accent-oak-light); /* Color roble claro para los encabezados */
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    font-size: 1.2rem;
+    border-top: 1px solid var(--table-border);
+}
+
+.user-table tbody tr:nth-child(even) {
+    background-color: var(--table-row-even);
+}
+
+.user-table tbody tr:nth-child(odd) {
+    background-color: var(--table-row-odd);
+}
+
+.user-table tbody tr:hover {
+    background-color: #3a3a3a;
+    cursor: pointer;
+    transform: scale(1.005); /* Ligero zoom al pasar el ratón */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Botones de acción en la tabla */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+.action-buttons button {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.action-buttons button.edit-button {
+    background-color: var(--accent-oak); /* Color roble oscuro para editar */
+    color: white; /* Texto blanco para el roble */
+}
+
+.action-buttons button.edit-button:hover {
+    background-color: var(--accent-oak-light); /* Versión más clara del roble */
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+.action-buttons button.delete-button {
+    background-color: var(--error-red);
+    color: white;
+}
+
+.action-buttons button.delete-button:hover {
+    background-color: var(--error-red-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Estilos para el modal de creación/edición y confirmación */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999; /* Z-index muy alto para asegurar que esté por encima de todo */
+    animation: fadeIn 0.3s ease-out; /* Animación de fade-in para el overlay */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: var(--secondary-dark-bg);
+    padding: 30px; /* Reducido para hacerlo más compacto */
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9);
+    width: 90%;
+    max-width: 400px; /* Ajustado para ser más ancho */
+    max-height: 500px; /* Ajustado para ser menos alto */
+    overflow-y: visible; /* ¡CLAVE! Eliminado el scroll interno del modal */
+    position: relative;
+    color: var(--text-light);
+    border: 2px solid var(--border-subtle);
+    animation: slideInFromTop 0.4s ease-out; /* Animación de entrada para el contenido del modal */
+}
+
+@keyframes slideInFromTop {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-content.confirm-modal {
+    max-width: 380px; /* Modal de confirmación aún más pequeño */
+    text-align: center;
+    padding: 30px;
+}
+
+.modal-content.confirm-modal p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    color: var(--text-secondary);
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 30px; /* Reducido un poco */
+    color: var(--accent-oak-light); /* Color roble claro para el título del modal */
+    text-align: center;
+    font-size: 2.2rem; /* Reducido un poco */
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9);
+}
+
+.modal-form label {
+    display: block;
+    margin-bottom: 10px; /* Reducido un poco */
+    font-weight: bold;
+    color: var(--accent-oak); /* Color roble oscuro para las etiquetas */
+    font-size: 1.1rem; /* Reducido un poco */
+}
+
+.modal-form input[type="text"],
+.modal-form input[type="email"],
+.modal-form input[type="password"],
+.modal-form select {
+    width: calc(100% - 24px); /* Ajusta padding */
+    padding: 12px; /* Reducido un poco */
+    margin-bottom: 20px; /* Reducido un poco */
+    border: 1px solid var(--border-input);
+    border-radius: 10px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    background-color: var(--tertiary-dark-bg);
+    color: var(--text-light);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.modal-form input[type="text"]:focus,
+.modal-form input[type="email"]:focus,
+.modal-form input[type="password"]:focus,
+.modal-form select:focus {
+    border-color: var(--accent-oak-light); /* Color roble claro al enfocar */
+    box-shadow: 0 0 12px rgba(139, 69, 19, 0.7);
+    outline: none;
+}
+
+/* Estilo para el selector de rol (flecha) */
+.modal-form select {
+    /* Eliminar la imagen de fondo para que el navegador use su flecha por defecto */
+    background-image: none;
+    /* Puedes añadir un padding-right extra si la flecha por defecto lo necesita */
+    padding-right: 15px; /* Ajusta este valor si la flecha se ve muy pegada */
+}
+
+.modal-form select option {
+    background-color: var(--tertiary-dark-bg);
+    color: var(--text-light);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    margin-top: 30px; /* Reducido un poco */
+}
+.modal-content.confirm-modal .form-actions {
+    justify-content: center;
+}
+
+.form-actions button {
+    padding: 12px 28px; /* Reducido un poco */
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1rem; /* Reducido un poco */
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-actions button[type="submit"] {
+    background-color: var(--primary-blue-button);
+    color: white;
+}
+
+.form-actions button[type="submit"]:hover {
+    background-color: var(--primary-blue-button-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+.form-actions button[type="button"],
+.form-actions button.cancel-button {
+    background-color: var(--cancel-button-bg);
+    color: white;
+}
+
+.form-actions button[type="button"]:hover,
+.form-actions button.cancel-button:hover {
+    background-color: var(--cancel-button-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+.close-modal-button {
+    position: absolute;
+    top: 10px; /* Ajustado para que esté más cerca de la esquina */
+    right: 10px; /* Ajustado para que esté más cerca de la esquina */
+    background: none;
+    border: none;
+    font-size: 2.2rem; /* Tamaño de la 'X' */
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: color 0.3s ease, transform 0.2s ease;
+    z-index: 100001; /* Asegura que esté por encima de todo en el modal */
+}
+
+.close-modal-button:hover {
+    color: var(--accent-oak-light); /* Color roble claro al pasar el ratón */
+    transform: rotate(180deg);
+}
+
+/* Mensajes de error y éxito */
+.message {
+    padding: 15px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    width: 100%;
+    box-sizing: border-box;
+    animation: fadeInOut 5s forwards; /* Animación para aparecer y desaparecer */
+    opacity: 0; /* Empieza invisible */
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(-10px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-10px); }
+}
+
+.message.error {
+    color: #f8d7da;
+    background-color: rgba(211, 47, 47, 0.9); /* Rojo de error más opaco */
+    border: 1px solid #f5c6cb;
+}
+
+.message.success {
+    color: #d4edda;
+    background-color: rgba(76, 175, 80, 0.9); /* Verde de éxito más opaco */
+    border: 1px solid #c3e6cb;
+}
+
+/* Loading y Error en la tabla */
+.admin-user-panel-container > div.error-message,
+.admin-user-panel-container > div:first-child:not(.message) { /* Selecciona el div de carga/error si no es el mensaje */
+    text-align: center;
+    padding: 40px;
+    font-size: 1.5rem;
+    color: var(--text-light);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .admin-user-panel-container {
+        padding: 20px;
+        margin-top: 120px; /* Ajuste para móviles */
+        max-width: 95%; /* Ajuste para móviles */
+    }
+    .admin-user-panel-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .admin-user-panel-header button.create-user-button {
+        width: 100%;
+    }
+    .user-table th, .user-table td {
+        padding: 15px 10px;
+        font-size: 0.9rem;
+    }
+    .action-buttons {
+        flex-direction: column;
+        gap: 5px;
+    }
+    .action-buttons button {
+        width: 100%;
+        margin-right: 0;
+    }
+    .modal-content {
+        padding: 20px; /* Más pequeño en móvil */
+        max-width: 95%;
+        max-height: 70vh; /* Ajuste para móviles */
+    }
+    .modal-content h2 {
+        font-size: 2rem;
+    }
+    .modal-form label {
+        font-size: 1rem;
+    }
+    .modal-form input, .modal-form select {
+        padding: 10px;
+        font-size: 1rem;
+    }
+    .form-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .form-actions button {
+        width: 100%;
+    }
+}

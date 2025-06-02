@@ -1,6 +1,7 @@
 import './HeaderBar.css';
 import React, { useState, useEffect } from 'react';
-import InicioSesion from './LoginDialog.jsx'; // Asegúrate de que la extensión sea correcta
+import InicioSesion from './LoginDialog.jsx'; // <-- CORREGIDO: Asegúrate de que la importación sea correcta
+ import AdminUserPanel from './AdminUserPanel.jsx'; // No necesitas importar AdminUserPanel aquí si solo navegas a él
 import { useTheme } from '../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -130,16 +131,18 @@ export default function HeaderBar() {
           </div>
           {loggedInUser.rol === 'admin' && ( // Solo para admins
             <>
-              {/* Puedes mantener opciones específicas de admin si las necesitas */}
-              {/* <div className="admin-option-button" onClick={() => {
+              <div className="admin-option-button" onClick={() => {
                 console.log('Navegar a Administrar Usuarios');
-                setShowAdminOptions(false);
+                setShowAdminOptions(false); // Cierra el dropdown
+                navigate('/admin/users'); // <-- NAVEGACIÓN A LA RUTA DEL PANEL DE ADMIN
               }}>
                 Administrar Usuarios
               </div>
-              <div className="admin-option-button" onClick={() => {
+              {/* Puedes mantener opciones específicas de admin si las necesitas */}
+              {/* <div className="admin-option-button" onClick={() => {
                 console.log('Navegar a Administrar Foros');
                 setShowAdminOptions(false);
+                navigate('/admin/forums');
               }}>
                 Administrar Foros
               </div> */}
