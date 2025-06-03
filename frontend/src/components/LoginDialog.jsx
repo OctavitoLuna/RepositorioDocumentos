@@ -1,30 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Ajustes de tamaño para hacer el modal más pequeño
+// Ajustes de tamaño y estilos para un modal más profesional y compacto
 const USER_ICON_ACTUAL_SIZE = "80px";
-const TITLE_FONT_SIZE = "36px";
+const TITLE_FONT_SIZE = "38px";
 const SMALL_ICON_SVG_SIZE = "24px";
 const LABEL_FONT_SIZE = "17px";
 const INPUT_FONT_SIZE = "18px";
 const BUTTON_FONT_SIZE = "22px";
 const MESSAGE_FONT_SIZE = "16px";
-const MODAL_WIDTH = "450px"; // Ancho más pequeño
-const MODAL_PADDING_VERTICAL = "30px";
-const MODAL_PADDING_HORIZONTAL = "30px";
+const MODAL_WIDTH = "450px"; // Ancho fijo para mantener la forma
+const MODAL_PADDING_VERTICAL = "40px";
+const MODAL_PADDING_HORIZONTAL = "40px";
 const CLOSE_BUTTON_FONT_SIZE = "50px";
 
 const PALETTE = {
-  BACKGROUND_MODAL: "#F6EEE3",
-  PRIMARY_ACCENT_BLUE: "#2F4F8B",
-  SECONDARY_ACCENT_GOLD: "#E1B85D",
-  SUCCESS_GREEN: "#166D3B",
-  TEXT_DARK: "#25384F",
-  TEXT_MUTED: "#78909C",
-  ERROR_RED: "#E57373",
+  BACKGROUND_MODAL: "#FDFDFD", // Un blanco suave y moderno
+  PRIMARY_ACCENT_BLUE: "#2F4F8B", // Azul profundo y elegante
+  SECONDARY_ACCENT_GOLD: "#E1B85D", // Dorado vibrante para acentos
+  SUCCESS_GREEN: "#28a745", // Verde estándar para éxito
+  TEXT_DARK: "#25384F", // Texto oscuro principal
+  TEXT_MUTED: "#78909C", // Gris para texto secundario
+  ERROR_RED: "#dc3545", // Rojo estándar para errores
   WHITE: "#FFFFFF",
-  CONTOUR_COLOR: "#000000",
-  BUTTON_HOVER_BLUE: "#4A6FA8",
+  CONTOUR_COLOR: "rgba(0,0,0,0.1)", // Contorno muy sutil para el modal
+  BUTTON_HOVER_BLUE: "#3a5f9e", // Azul ligeramente más oscuro al hover
+  BACKGROUND_OVERLAY: "rgba(0,0,0,0.6)", // Oscurece el fondo 3D sin desenfocarlo
 };
 
 // Icono de ojo para mostrar contraseña
@@ -47,23 +48,43 @@ const EyeIconHide = ({ color, size = SMALL_ICON_SVG_SIZE }) => (
   </svg>
 );
 
+// Icono de usuario SVG con animaciones de Framer Motion
+const UserProfessionalIcon = ({ size = USER_ICON_ACTUAL_SIZE, color = PALETTE.PRIMARY_ACCENT_BLUE }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width={size}
+    height={size}
+    fill={color}
+  >
+    {/* Animación para la cabeza */}
+    <motion.circle
+      cx="12"
+      cy="7"
+      r="4"
+      initial={{ scale: 0.5, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ delay: 0.05, duration: 0.3, ease: "easeOut" }} // Delay y duración reducidos
+    />
+    {/* Animación para el cuerpo */}
+    <motion.path
+      d="M12 14c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+      initial={{ y: 20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ delay: 0.15, duration: 0.4, ease: "easeOut" }} // Delay y duración reducidos
+    />
+  </svg>
+);
+
 const InicioSesion = ({ isOpen, onLogin, onClose }) => {
-  // Estados para los campos del formulario
   const [usuario, setUsuario] = useState("");
   const [contrasenia, setContrasenia] = useState("");
-  // Estado para mostrar/ocultar contraseña
   const [showPassword, setShowPassword] = useState(false);
-  // Estado para el indicador de carga
   const [loading, setLoading] = useState(false);
-  // Estado para el mensaje de feedback al usuario
   const [mensaje, setMensaje] = useState(null);
-  // Estado para el tipo de mensaje (éxito o error)
   const [mensajeTipo, setMensajeTipo] = useState(null);
-  // Estado para controlar la visibilidad del modal (para animaciones)
   const [isVisible, setIsVisible] = useState(isOpen);
 
-  // Sincroniza el estado interno `isVisible` con la prop `isOpen`
-  // También resetea los campos y mensajes cuando el modal se abre
   useEffect(() => {
     setIsVisible(isOpen);
     if (isOpen) {
@@ -75,181 +96,146 @@ const InicioSesion = ({ isOpen, onLogin, onClose }) => {
     }
   }, [isOpen]);
 
-  // Variantes de animación para los inputs (Framer Motion)
-  const inputVariants = {
-    focus: {
-      scale: 1.01,
-      boxShadow: `0 0 0 2px ${PALETTE.SECONDARY_ACCENT_GOLD}`,
-      transition: { duration: 0.2 },
-    },
-  };
-
-  // Variantes de animación para los botones (Framer Motion)
-  const buttonVariants = {
-    hover: {
-      backgroundColor: PALETTE.BUTTON_HOVER_BLUE,
-      scale: 1.02,
-      transition: { duration: 0.15 },
-    },
-    tap: { scale: 0.98 },
-  };
-
   // Variantes de animación para el fondo del modal (Framer Motion)
   const backdropVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0.2 } },
-    exit: { opacity: 0, transition: { duration: 0.2 } },
+    visible: { opacity: 1, transition: { duration: 0.3 } }, // Transición más rápida
+    exit: { opacity: 0, transition: { duration: 0.2 } },    // Transición más rápida
   };
 
   // Variantes de animación para el modal en sí (Framer Motion)
   const modalVariants = {
-    hidden: { scale: 0.95, opacity: 0 },
+    hidden: { scale: 0.95, opacity: 0, y: -20 }, // Ligeramente más pequeño y menos desplazamiento
     visible: {
       scale: 1,
       opacity: 1,
-      transition: { type: "spring", stiffness: 100, damping: 15 },
-    },
-    exit: { scale: 0.95, opacity: 0, transition: { duration: 0.2 } },
-  };
-
-  // Variantes de animación para el icono de usuario (Framer Motion)
-  const iconVariants = {
-    hidden: { y: -20, opacity: 0 },
-    visible: {
       y: 0,
-      opacity: 1,
-      transition: { delay: 0.2, type: "spring", stiffness: 120 },
+      transition: {
+        type: "spring",
+        stiffness: 150, // Más rígido para una aparición más rápida
+        damping: 20,    // Menos amortiguación
+        when: "beforeChildren",
+        staggerChildren: 0.07, // Retraso entre la animación de los hijos (más rápido)
+      },
     },
-    exit: { y: -20, opacity: 0, transition: { duration: 0.1 } },
+    exit: { scale: 0.9, opacity: 0, y: -20, transition: { duration: 0.2 } }, // Animación de salida más rápida y pronunciada
   };
 
-  // Maneja el envío del formulario de login
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Previene el comportamiento por defecto del formulario
-    setMensaje(null); // Limpia cualquier mensaje anterior
-    setMensajeTipo(null); // Limpia el tipo de mensaje anterior
+  // Variantes para los elementos dentro del modal (usando staggerChildren)
+  const itemVariants = {
+    hidden: { y: 15, opacity: 0 }, // Menos desplazamiento inicial
+    visible: { y: 0, opacity: 1, transition: { duration: 0.3, ease: "easeOut" } }, // Duración reducida
+  };
 
-    // Validación básica de campos vacíos
+  // Variantes de animación para los inputs
+  const inputVariants = {
+    focus: {
+      scale: 1.005,
+      boxShadow: `0 0 0 3px ${PALETTE.SECONDARY_ACCENT_GOLD}80`,
+      transition: { duration: 0.2 },
+    },
+  };
+
+  // Variantes de animación para los botones
+  const buttonVariants = {
+    hover: {
+      backgroundColor: PALETTE.BUTTON_HOVER_BLUE,
+      scale: 1.01,
+      transition: { duration: 0.15 },
+    },
+    tap: { scale: 0.99 },
+  };
+
+  // Variantes para mensajes (éxito/error)
+  const messageVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+    exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMensaje(null);
+    setMensajeTipo(null);
+
     if (!usuario || !contrasenia) {
       setMensaje("Por favor, rellena todos los campos.");
       setMensajeTipo('error');
       return;
     }
 
-    setLoading(true); // Activa el estado de carga
+    setLoading(true);
     try {
-      // Realiza la petición al backend para iniciar sesión
       const res = await fetch("http://localhost:3001/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo: usuario, contraseña: contrasenia }),
       });
 
-      // Siempre intenta parsear la respuesta JSON, incluso si es un error
       const data = await res.json();
       console.log("Respuesta completa del backend (frontend):", data);
       console.log("Status HTTP de la respuesta (frontend):", res.status);
 
-      // Si la respuesta HTTP es exitosa (código 2xx)
       if (res.ok) {
         setMensaje("¡Sesión iniciada correctamente!");
         setMensajeTipo('success');
-
-        // Llama a la función `onLogin` pasada por props para manejar el éxito en el componente padre
         if (onLogin) {
-            onLogin(data.user, data.token); // Pasa el objeto de usuario y el token
+          onLogin(data.user, data.token);
         }
-
-        // Cierra el modal después de un breve retraso para que el usuario vea el mensaje de éxito
         setTimeout(() => {
-          setIsVisible(false); // Inicia la animación de salida del modal
-        }, 1000); // 1 segundo
+          setIsVisible(false);
+        }, 1200); // Dar más tiempo para ver el mensaje de éxito
       } else {
-        // Si la respuesta HTTP indica un error
         const errorMessage = data.error || data.mensaje || "Error al iniciar sesión. Credenciales incorrectas.";
         setMensaje(errorMessage);
         setMensajeTipo('error');
-        // El modal no se cierra automáticamente en caso de error, para que el usuario pueda corregir
       }
     } catch (error) {
-      // Captura errores de red (ej. servidor no disponible, problemas de CORS)
       console.error("Error de conexión o en el fetch:", error);
       setMensaje("Error de conexión con el servidor. Intenta de nuevo más tarde.");
       setMensajeTipo('error');
     } finally {
-      setLoading(false); // Desactiva el estado de carga al finalizar la operación
+      setLoading(false);
     }
   };
 
-  // Maneja el cierre del modal
   const handleClose = () => {
-    setIsVisible(false); // Inicia la animación de salida
+    setIsVisible(false);
   };
 
-  // Se ejecuta cuando la animación de salida de AnimatePresence ha terminado
   const onExitComplete = () => {
-    if (onClose) onClose(); // Llama a la función `onClose` del padre
+    if (onClose) onClose();
   };
 
-  // Estilos en línea para los elementos del formulario y el modal
+  // --- Estilos CSS ---
   const labelStyle = {
     fontSize: LABEL_FONT_SIZE,
     color: PALETTE.TEXT_DARK,
     marginBottom: "8px",
     display: "block",
     textAlign: "left",
-    fontWeight: 500,
+    fontWeight: 600,
     fontFamily: "'Playfair Display', serif",
   };
 
   const inputBaseStyle = {
     width: "100%",
-    padding: "14px 16px",
+    padding: "15px 18px",
     fontSize: INPUT_FONT_SIZE,
-    border: `1px solid ${PALETTE.TEXT_MUTED}`,
-    borderRadius: "8px",
+    border: `1px solid ${PALETTE.TEXT_MUTED}40`,
+    borderRadius: "10px",
     backgroundColor: PALETTE.WHITE,
     color: PALETTE.TEXT_DARK,
-    fontFamily: "'Playfair Display', serif",
+    fontFamily: "'Roboto', sans-serif",
     boxSizing: "border-box",
     marginBottom: "20px",
+    boxShadow: "0 2px 5px rgba(0,0,0,0.03) inset",
   };
 
   const passwordInputStyle = {
     ...inputBaseStyle,
     paddingRight: "50px",
     marginBottom: "0",
-  };
-
-  const iconContainerStyle = {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: "30px",
-    width: USER_ICON_ACTUAL_SIZE,
-    height: USER_ICON_ACTUAL_SIZE,
-    margin: "0 auto 30px auto",
-  };
-
-  const modalStyle = {
-    backgroundColor: PALETTE.BACKGROUND_MODAL,
-    borderRadius: "15px",
-    width: MODAL_WIDTH,
-    padding: `${MODAL_PADDING_VERTICAL} ${MODAL_PADDING_HORIZONTAL}`,
-    textAlign: "center",
-    fontFamily: "'Playfair Display', serif",
-    boxShadow: `0 8px 20px ${PALETTE.CONTOUR_COLOR}40`,
-    border: `1px solid ${PALETTE.CONTOUR_COLOR}`,
-    position: "relative",
-  };
-
-  const mensajeStyle = {
-    marginBottom: "20px",
-    fontWeight: "bold",
-    color: mensajeTipo === 'success' ? PALETTE.SUCCESS_GREEN : PALETTE.ERROR_RED,
-    fontFamily: "'Playfair Display', serif",
-    fontSize: MESSAGE_FONT_SIZE,
-    minHeight: "25px", // Mantiene el espacio incluso si no hay mensaje
   };
 
   const passwordInputContainerStyle = {
@@ -260,8 +246,8 @@ const InicioSesion = ({ isOpen, onLogin, onClose }) => {
 
   const passwordToggleButtonStyle = {
     position: "absolute",
-    top: "50%",
     right: "15px",
+    top: "50%",
     transform: "translateY(-50%)",
     background: "none",
     border: "none",
@@ -270,23 +256,51 @@ const InicioSesion = ({ isOpen, onLogin, onClose }) => {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    outline: "none",
+    zIndex: 2,
     color: PALETTE.TEXT_MUTED,
-    lineHeight: 1,
+  };
+
+  const iconContainerStyle = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: "35px",
+    width: USER_ICON_ACTUAL_SIZE,
+    height: USER_ICON_ACTUAL_SIZE,
+    margin: "0 auto 35px auto",
+    backgroundColor: PALETTE.PRIMARY_ACCENT_BLUE + "20",
+    borderRadius: "50%",
+    boxShadow: "0 5px 15px rgba(0,0,0,0.08)",
+  };
+
+  const modalStyle = {
+    backgroundColor: PALETTE.BACKGROUND_MODAL,
+    borderRadius: "20px",
+    width: MODAL_WIDTH,
+    padding: `${MODAL_PADDING_VERTICAL} ${MODAL_PADDING_HORIZONTAL}`,
+    textAlign: "center",
+    fontFamily: "'Playfair Display', serif",
+    boxShadow: `0 10px 30px ${PALETTE.CONTOUR_COLOR}`,
+    border: `1px solid ${PALETTE.CONTOUR_COLOR}`,
+    position: "relative",
+    overflow: "hidden",
   };
 
   const titleStyle = {
     fontSize: TITLE_FONT_SIZE,
     fontWeight: 700,
     color: PALETTE.TEXT_DARK,
-    marginBottom: "35px",
+    marginBottom: "40px",
     textTransform: "uppercase",
     letterSpacing: "2px",
     fontFamily: "'Playfair Display', serif",
+    position: "relative",
   };
 
   const closeButtonStyle = {
     position: "absolute",
-    top: "10px", // Ajustado para que esté un poco más bajo y no choque con el borde superior del navegador
+    top: "15px",
     right: "15px",
     background: "none",
     border: "none",
@@ -296,31 +310,45 @@ const InicioSesion = ({ isOpen, onLogin, onClose }) => {
     lineHeight: 1,
     padding: "0",
     outline: "none",
-    transition: "transform 0.2s ease-in-out",
+    transition: "transform 0.2s ease-in-out, color 0.2s ease-in-out",
     userSelect: "none",
-    zIndex: 100001, // AUMENTADO: Asegura que esté por encima del modal y todo lo demás
+    zIndex: 100001,
   };
 
   const submitButtonStyle = {
     width: "100%",
-    padding: "16px",
+    padding: "18px",
     fontSize: BUTTON_FONT_SIZE,
     fontWeight: 700,
     border: "none",
-    borderRadius: "8px",
+    borderRadius: "10px",
     backgroundColor: PALETTE.PRIMARY_ACCENT_BLUE,
     color: PALETTE.WHITE,
     cursor: loading ? "not-allowed" : "pointer",
     textTransform: "uppercase",
-    opacity: loading ? 0.8 : 1,
-    fontFamily: "'Playfair Display', serif",
-    marginTop: "20px",
-    transition: "background-color 0.15s ease-in-out",
+    opacity: loading ? 0.9 : 1,
+    fontFamily: "'Roboto', sans-serif",
+    marginTop: "25px",
+    transition: "background-color 0.15s ease-in-out, transform 0.1s ease-in-out",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "10px",
+  };
+
+  // Estilo para el spinner
+  const spinnerStyle = {
+    border: "4px solid rgba(255, 255, 255, 0.3)",
+    borderTop: `4px solid ${PALETTE.WHITE}`,
+    borderRadius: "50%",
+    width: "20px",
+    height: "20px",
+    animation: "spin 1s linear infinite",
   };
 
   return (
     <AnimatePresence onExitComplete={onExitComplete}>
-      {isVisible && ( // Renderiza el modal solo si `isVisible` es true
+      {isVisible && (
         <motion.div
           key="backdrop"
           variants={backdropVariants}
@@ -333,20 +361,32 @@ const InicioSesion = ({ isOpen, onLogin, onClose }) => {
             left: 0,
             width: "100vw",
             height: "100vh",
-            backgroundColor: "rgba(0,0,0,0.65)",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            zIndex: 99999, // Z-index muy alto para el fondo
+            zIndex: 99999,
           }}
         >
+          {/* El overlay de color oscuro, sin blur para dejar el fondo 3D visible */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              backgroundColor: PALETTE.BACKGROUND_OVERLAY, // Solo color oscuro
+              zIndex: 0, // Debajo del modal
+            }}
+          ></div>
+
           <motion.div
             key="modal"
             variants={modalVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
-            style={{ ...modalStyle, zIndex: 100000 }} // Z-index aún más alto para el modal
+            style={{ ...modalStyle, zIndex: 100000 }}
           >
             <motion.button
               onClick={handleClose}
@@ -357,79 +397,109 @@ const InicioSesion = ({ isOpen, onLogin, onClose }) => {
               &times;
             </motion.button>
 
-            <div style={iconContainerStyle}>
-              <motion.div
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  backgroundColor: PALETTE.TEXT_MUTED,
-                  borderRadius: "50%",
-                }}
-                variants={iconVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-              />
-            </div>
+            {/* Agrupamos el icono y el título para una animación de entrada más cohesionada */}
+            <motion.div variants={itemVariants}>
+              <div style={iconContainerStyle}>
+                <UserProfessionalIcon /> {/* Icono animado */}
+              </div>
+              <h2 style={titleStyle}>Inicio de Sesión</h2>
+            </motion.div>
 
-            <h2 style={titleStyle}>Inicio de Sesión</h2>
-
-            {mensaje && <p style={mensajeStyle}>{mensaje}</p>}
+            <AnimatePresence mode="wait">
+              {mensaje && (
+                <motion.p
+                  key="message"
+                  variants={messageVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  style={{
+                    marginBottom: "20px",
+                    fontWeight: "bold",
+                    color: mensajeTipo === 'success' ? PALETTE.SUCCESS_GREEN : PALETTE.ERROR_RED,
+                    fontFamily: "'Roboto', sans-serif",
+                    fontSize: MESSAGE_FONT_SIZE,
+                    minHeight: "25px",
+                  }}
+                >
+                  {mensaje}
+                </motion.p>
+              )}
+            </AnimatePresence>
 
             <form onSubmit={handleSubmit} style={{ textAlign: "left" }}>
-              <label htmlFor="usuario" style={labelStyle}>
-                Correo Electrónico
-              </label>
-              <motion.input
-                type="email"
-                id="usuario"
-                placeholder="Escribe tu correo electrónico"
-                value={usuario}
-                onChange={(e) => setUsuario(e.target.value)}
-                variants={inputVariants}
-                whileFocus="focus"
-                style={inputBaseStyle}
-              />
-
-              <label htmlFor="contrasenia" style={labelStyle}>
-                Contraseña
-              </label>
-              <div style={passwordInputContainerStyle}>
+              {/* Cada campo y su label se animan individualmente con itemVariants */}
+              <motion.div variants={itemVariants}>
+                <label htmlFor="usuario" style={labelStyle}>
+                  Correo Electrónico
+                </label>
                 <motion.input
-                  type={showPassword ? "text" : "password"}
-                  id="contrasenia"
-                  placeholder="Introduce tu contraseña"
-                  value={contrasenia}
-                  onChange={(e) => setContrasenia(e.target.value)}
+                  type="email"
+                  id="usuario"
+                  placeholder="Escribe tu correo electrónico"
+                  value={usuario}
+                  onChange={(e) => setUsuario(e.target.value)}
                   variants={inputVariants}
                   whileFocus="focus"
-                  style={passwordInputStyle}
+                  style={inputBaseStyle}
                 />
+              </motion.div>
+
+              <motion.div variants={itemVariants}>
+                <label htmlFor="contrasenia" style={labelStyle}>
+                  Contraseña
+                </label>
+                <div style={passwordInputContainerStyle}>
+                  <motion.input
+                    type={showPassword ? "text" : "password"}
+                    id="contrasenia"
+                    placeholder="Introduce tu contraseña"
+                    value={contrasenia}
+                    onChange={(e) => setContrasenia(e.target.value)}
+                    variants={inputVariants}
+                    whileFocus="focus"
+                    style={passwordInputStyle}
+                  />
+                  <motion.button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={passwordToggleButtonStyle}
+                    whileHover={{ opacity: 0.8, scale: 1.05 }}
+                    title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                  >
+                    {showPassword ? (
+                      <EyeIconHide color={PALETTE.TEXT_MUTED} size={SMALL_ICON_SVG_SIZE} />
+                    ) : (
+                      <EyeIconShow color={PALETTE.TEXT_MUTED} size={SMALL_ICON_SVG_SIZE} />
+                    )}
+                  </motion.button>
+                </div>
+              </motion.div>
+
+              {/* El botón de acceder también se anima con itemVariants */}
+              <motion.div variants={itemVariants}>
                 <motion.button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  style={passwordToggleButtonStyle}
-                  whileHover={{ opacity: 0.7, scale: 1.1 }}
-                  title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                  type="submit"
+                  disabled={loading}
+                  variants={buttonVariants}
+                  whileHover="hover"
+                  whileTap="tap"
+                  style={submitButtonStyle}
                 >
-                  {showPassword ? (
-                    <EyeIconHide color={PALETTE.TEXT_MUTED} size={SMALL_ICON_SVG_SIZE} />
+                  {loading ? (
+                    <>
+                      <motion.div
+                        style={spinnerStyle}
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      />
+                      ACCEDIENDO...
+                    </>
                   ) : (
-                    <EyeIconShow color={PALETTE.TEXT_MUTED} size={SMALL_ICON_SVG_SIZE} />
+                    "ACCEDER"
                   )}
                 </motion.button>
-              </div>
-
-              <motion.button
-                type="submit"
-                disabled={loading}
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-                style={submitButtonStyle}
-              >
-                {loading ? "Accediendo..." : "ACCEDER"}
-              </motion.button>
+              </motion.div>
             </form>
           </motion.div>
         </motion.div>

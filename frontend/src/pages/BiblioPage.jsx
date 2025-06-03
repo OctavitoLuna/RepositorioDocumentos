@@ -2,16 +2,35 @@ import React, { useState, useEffect } from 'react';
 import BusquedaLibros from '../components/BusquedaLibros';
 import FiltroLibro from '../components/FiltroLibro';
 import ContenidoCategoria from '../components/ContenidoCategoria';
-import ModalDetalleLibro from '../components/ModalDetalleLibro';
-import CollectionsModal from '../components/collection/CollectionsModal'; // nuevo componente para colecciones
+import BookData from '../components/BookData';
+// import ModalDetalleLibro from '../components/ModalDetalleLibro';
+// import CollectionsModal from '../components/collection/CollectionsModal';
+import DocumentForm from '../components/DocumentForm';
 
 const BibliotecaPage = () => {
   const [resultados, setResultados] = useState([]);
-  const [filtro, setFiltro] = useState('titulo'); // Por defecto solo título
+  const [filtro, setFiltro] = useState('titulo');
+  const [showDocumentForm, setShowDocumentForm] = useState(false);
 
   const [documentoSeleccionado, setDocumentoSeleccionado] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [showCollectionsModal, setShowCollectionsModal] = useState(false);
+  const [showBookData, setShowBookData] = useState(false);
+
+  const [userRole, setUserRole] = useState('visitante'); // valor por defecto
+  const [usuarioResponsableId, setUsuarioResponsableId] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        setUserRole(user.rol || 'visitante');
+        setUsuarioResponsableId(user._id || null);
+      } catch {
+        setUserRole('visitante');
+        setUsuarioResponsableId(null);
+      }
+    }
+  }, []);
 
   const obtenerTodosDocumentos = async () => {
     try {
@@ -55,12 +74,18 @@ const BibliotecaPage = () => {
 
   const handleSelectBook = (book) => {
     setDocumentoSeleccionado(book);
-    setModalVisible(true);
+    setShowBookData(true);
   };
 
-  const handleCloseModal = () => {
-    setModalVisible(false);
+  const handleCloseBookData = () => {
+    setShowBookData(false);
     setDocumentoSeleccionado(null);
+  };
+
+  // Función para actualizar lista y cerrar formulario tras crear documento
+  const handleDocumentCreated = (nuevoDocumento) => {
+    obtenerTodosDocumentos();
+    setShowDocumentForm(false);
   };
 
   return (
@@ -69,21 +94,31 @@ const BibliotecaPage = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <FiltroLibro onFilterChange={setFiltro} />
           <BusquedaLibros onSearch={handleSearch} />
-          <button
-            onClick={() => setShowCollectionsModal(true)}
-            style={{
-              backgroundColor: '#D46D1E',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '10px 20px',
-              cursor: 'pointer',
-              fontWeight: '600',
-              marginLeft: '15px',
-            }}
-          >
-            Mis Colecciones
-          </button>
+
+          {/* Botón "+" visible solo para admin */}
+          {userRole === 'admin' && (
+            <button
+              onClick={() => setShowDocumentForm(true)}
+              style={{
+                backgroundColor: '#4b6e35',
+                color: 'white',
+                border: 'none',
+                borderRadius: '50%',
+                width: '40px',
+                height: '40px',
+                fontSize: '28px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                marginLeft: '15px',
+                lineHeight: '36px',
+                userSelect: 'none',
+              }}
+              title="Agregar documento"
+              aria-label="Agregar documento"
+            >
+              +
+            </button>
+          )}
         </div>
 
         {resultados.length === 0 ? (
@@ -92,18 +127,35 @@ const BibliotecaPage = () => {
           <ContenidoCategoria documentos={resultados} onDocumentoClick={handleSelectBook} />
         )}
 
-        <ModalDetalleLibro
+        {showBookData && documentoSeleccionado && (
+          <BookData
+            document={documentoSeleccionado}
+            onClose={handleCloseBookData}
+            userRole={userRole} // pasar rol a BookData
+          />
+        )}
+
+        {/* Modal formulario para agregar documento */}
+        {showDocumentForm && (
+          <DocumentForm
+            usuarioResponsableId={usuarioResponsableId}
+            onSubmit={handleDocumentCreated}
+          />
+        )}
+
+        {/* Comentados para evitar que aparezcan */}
+        {/* <ModalDetalleLibro
           documento={documentoSeleccionado}
           visible={modalVisible}
-          onClose={handleCloseModal}
-        />
+          onClose={() => setModalVisible(false)}
+        /> */}
 
-        <CollectionsModal
+        {/* <CollectionsModal
           visible={showCollectionsModal}
           onClose={() => setShowCollectionsModal(false)}
-          usuarioId={'68150275b0a432b34c21344d'} // cambia a usuario actual si tienes
-          onSelectDocument={handleSelectBook} // para abrir detalle libro desde colección
-        />
+          usuarioId={'68150275b0a432b34c21344d'}
+          onSelectDocument={handleSelectBook}
+        /> */}
       </div>
     </div>
   );
