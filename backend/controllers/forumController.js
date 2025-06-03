@@ -1,48 +1,63 @@
-const { Forum } = require('../models/models');
+const { Document, CommentForum } = require('../models/models'); // Ajusta según dónde exportes CommentForum
 
-
-// Obtener todos los foros
-exports.getAllForums = async (req, res) => {
+// Obtener categorías dinámicas (únicas) desde documentos
+exports.getCategories = async (req, res) => {
   try {
-    const forums = await Forum.find().populate('id_autor').populate('id_documents');
-    res.json(forums);
+    const categorias = await Document.distinct('categoria');
+    res.json(categorias);
   } catch (error) {
-    res.status(500).json({ error: 'Error al obtener los foros' });
+    res.status(500).json({ error: 'Error obteniendo categorías' });
   }
 };
 
-// Crear un nuevo foro
-exports.createForum = async (req, res) => {
-  try {
-    const { nombre, categoria, id_autor, id_documents } = req.body;
-    const nuevoForo = new Forum({ nombre, categoria, id_autor, id_documents });
-    const foroGuardado = await nuevoForo.save();
-    res.status(201).json(foroGuardado);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al crear el foro' });
+// Función recursiva para construir árbol de comentarios con respuestas
+async function getReplies(commentId) {
+  const replies = await CommentForum.find({ parent_id: commentId }).sort({ fecha: 1 }).lean();
+  for (let reply of replies) {
+    reply.respuestas = await getReplies(reply._id);
   }
-};
+  return replies;
+}
 
-// Obtener un foro por ID
-exports.getForumById = async (req, res) => {
-  try {
-    const forum = await Forum.findById(req.params.id).populate('id_autor').populate('id_documents');
-    if (!forum) return res.status(404).json({ message: 'Foro no encontrado' });
-    res.json(forum);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener el foro' });
-  }
-};
-
-// Buscar foros por categoría
-exports.getForumsByCategory = async (req, res) => {
+// Obtener comentarios anidados para categoría (solo comentarios raíz y sus respuestas)
+exports.getCommentsByCategory = async (req, res) => {
   try {
     const categoria = req.params.categoria;
-    const forums = await Forum.find({ categoria: categoria })
-                              .populate('id_autor')
-                              .populate('id_documents');
-    res.json(forums);
+    // Obtener comentarios raíz (parent_id == null) de la categoría
+    const rootComments = await CommentForum.find({ categoria, parent_id: null })
+      .sort({ fecha: -1 }) // más recientes primero
+      .lean();
+
+    // Para cada comentario raíz, obtener respuestas recursivamente
+    for (let comment of rootComments) {
+      comment.respuestas = await getReplies(comment._id);
+    }
+
+    res.json(rootComments);
   } catch (error) {
-    res.status(500).json({ error: 'Error al buscar foros por categoría' });
+    res.status(500).json({ error: 'Error obteniendo comentarios por categoría' });
+  }
+};
+
+
+exports.createComment = async (req, res) => {
+  try {
+    const { categoria, texto, usuario_id, parent_id = null } = req.body;
+    if (!categoria || !texto || !usuario_id) {
+      return res.status(400).json({ error: 'Faltan campos obligatorios' });
+    }
+
+    const newComment = new CommentForum({
+      categoria,
+      texto,
+      usuario_id,
+      parent_id,
+      fecha: new Date(),
+    });
+
+    const savedComment = await newComment.save();
+    res.status(201).json(savedComment);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };

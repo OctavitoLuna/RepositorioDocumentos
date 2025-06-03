@@ -13,8 +13,8 @@ const commentRoutes = require("./routes/commentRoutes");
 const logRoutes = require("./routes/logRoutes");
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes"); // Ruta login
-const forumRoutes = require('./routes/forumRoutes');
 const collectionRoutes = require('./routes/collectionRoutes');
+const forumRoutes = require('./routes/forumRoutes');
 
 // Importa modelos (si los necesitas aquí)
 const { Document, Comment, User, Log } = require("./models/models");
@@ -39,8 +39,8 @@ app.use("/comments", commentRoutes);
 app.use("/logs", logRoutes);
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes); // Ruta login
-app.use('/api/foros', forumRoutes);
 app.use('/collections', collectionRoutes);
+app.use('/forums', forumRoutes);
 
 // Endpoints REST adicionales (puedes mover a rutas si quieres)
 app.get("/documents", (req, res) => {

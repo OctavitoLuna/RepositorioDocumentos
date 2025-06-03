@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { Schema, Types } = mongoose;
 const bcrypt = require("bcryptjs");
 
 // Documento
@@ -21,6 +22,7 @@ const documentSchema = new mongoose.Schema({
     }
   ]
 });
+documentSchema.index({ categoria: 1 });
 const Document = mongoose.models.Document || mongoose.model("Document", documentSchema);
 
 // Comentario
@@ -31,6 +33,10 @@ const commentSchema = new mongoose.Schema({
   fecha_comentario: { type: Date, default: Date.now },
   parent_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Comment', default: null } // nuevo campo
 });
+
+commentSchema.index({ documento_id: 1 });
+commentSchema.index({ usuario_id: 1 });
+commentSchema.index({ parent_id: 1 });
 const Comment = mongoose.models.Comment || mongoose.model("Comment", commentSchema);
 // Usuario
 const userSchema = new mongoose.Schema({
@@ -68,15 +74,6 @@ const logSchema = new mongoose.Schema({
 });
 const Log = mongoose.models.Log || mongoose.model("Log", logSchema);
 
-// Forum (Foro)
-const forumSchema = new mongoose.Schema({
-  nombre: String,
-  categoria: String,
-  fecha_creacion: { type: Date, default: Date.now },
-  id_autor: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  id_documents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Document' }]
-});
-const Forum = mongoose.models.Forum || mongoose.model("Forum", forumSchema);
 
 const collectionSchema = new mongoose.Schema({
   nombre: { type: String, required: true },
@@ -88,4 +85,22 @@ const collectionSchema = new mongoose.Schema({
 
 const Collection = mongoose.models.Collection || mongoose.model('Collection', collectionSchema);
 
-module.exports = { Document, Comment, User, Log, Forum, Collection};
+
+
+// Esquema para comentarios del foro con estructura anidada
+const CommentForumSchema = new Schema({
+  categoria: { type: String, required: true },
+  texto: { type: String, required: true },
+  usuario_id: { type: Types.ObjectId, ref: 'User', required: true },
+  fecha: { type: Date, default: Date.now },
+  parent_id: { type: Types.ObjectId, ref: 'CommentForum', default: null }, // Comentario padre (puede ser null)
+});
+
+CommentForumSchema.index({ categoria: 1 });
+CommentForumSchema.index({ usuario_id: 1 });
+CommentForumSchema.index({ parent_id: 1 });
+
+const CommentForum = mongoose.models.CommentForum || mongoose.model('CommentForum', CommentForumSchema);
+
+// Exporta todos los modelos correctamente
+module.exports = { Document, Comment, User, Log, Collection, CommentForum };
