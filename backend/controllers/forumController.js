@@ -43,20 +43,38 @@ exports.getCommentsByCategory = async (req, res) => {
 exports.createComment = async (req, res) => {
   try {
     const { categoria, texto, usuario_id, parent_id = null } = req.body;
-    if (!categoria || !texto || !usuario_id) {
+    if (!categoria || !texto) {
       return res.status(400).json({ error: 'Faltan campos obligatorios' });
     }
 
     const newComment = new CommentForum({
       categoria,
       texto,
-      usuario_id,
+      usuario_id: usuario_id || null,
       parent_id,
       fecha: new Date(),
     });
 
-    const savedComment = await newComment.save();
-    res.status(201).json(savedComment);
+    await newComment.save();
+
+    // Consultar todos los comentarios actualizados de la categoría
+    const rootComments = await CommentForum.find({ categoria, parent_id: null }).sort({ fecha: -1 }).lean();
+
+    // Función para obtener respuestas recursivas (ya tienes esta función)
+    async function getReplies(commentId) {
+      const replies = await CommentForum.find({ parent_id: commentId }).sort({ fecha: 1 }).lean();
+      for (let reply of replies) {
+        reply.respuestas = await getReplies(reply._id);
+      }
+      return replies;
+    }
+
+    for (let comment of rootComments) {
+      comment.respuestas = await getReplies(comment._id);
+    }
+
+    res.status(201).json(rootComments);
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

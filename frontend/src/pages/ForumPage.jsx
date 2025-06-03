@@ -35,7 +35,10 @@ export default function ForumPage() {
                 {categories.map((cat) => (
                   <button
                     key={cat}
-                    style={styles.categoryButton}
+                    style={{
+                      ...styles.categoryButton,
+                      backgroundColor: selectedCategory === cat ? '#D46D1E' : '#222'
+                    }}
                     onClick={() => setSelectedCategory(cat)}
                   >
                     {cat}
@@ -43,22 +46,37 @@ export default function ForumPage() {
                 ))}
               </div>
 
+              {/* Modal para comentarios */}
               {selectedCategory && (
                 <CategoryForumModal
                   categoria={selectedCategory}
                   onClose={() => setSelectedCategory(null)}
-                  userId={null /* Cambiar por usuario real si tienes */}
+                  userId={null}
                 />
               )}
             </>
           )}
 
-          {selectedTab === "libros" && (
-            <>
-              <h2>Libros</h2>
-              <BooksView />
-            </>
-          )}
+{selectedTab === "libros" && (
+  <>
+    <h2>Libros</h2>
+    <a 
+      href="http://localhost:5173/biblio" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      style={{
+        display: 'inline-block',
+        marginTop: '20px',
+        fontSize: '18px',
+        color: '#D46D1E',
+        textDecoration: 'underline',
+        cursor: 'pointer',
+      }}
+    >
+      Ir a la biblioteca
+    </a>
+  </>
+)}
         </main>
       </div>
     </div>

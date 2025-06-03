@@ -91,7 +91,7 @@ const Collection = mongoose.models.Collection || mongoose.model('Collection', co
 const CommentForumSchema = new Schema({
   categoria: { type: String, required: true },
   texto: { type: String, required: true },
-  usuario_id: { type: Types.ObjectId, ref: 'User', required: true },
+  usuario_id: { type: Types.ObjectId, ref: 'User', required: false, default: null },
   fecha: { type: Date, default: Date.now },
   parent_id: { type: Types.ObjectId, ref: 'CommentForum', default: null }, // Comentario padre (puede ser null)
 });
