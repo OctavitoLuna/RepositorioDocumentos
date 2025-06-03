@@ -13,12 +13,10 @@
 /* ACOMODO DE IMÁGENES EN FILAS SIN ESPACIO ENTRE COLUMNAS NI FILAS */
 .books-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* mantener tamaño máximo de .book-item */
+  grid-template-columns: repeat(auto-fill, minmax(15vw, 1fr)); /* mantener tamaño máximo de .book-item */
   justify-content: start;
   align-items: start;
   width: 100%;
-  gap: 0; 
-  padding: 0px;
   max-height: calc(7 * 15vw); /* 3 filas de 300px */
   overflow: hidden; /* oculta filas adicionales */
 }
@@ -27,7 +25,7 @@
 .book-item {
   width: 100%;
   max-width: 15vw;
-  height: 15vw;
+  height: 4vw;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -36,7 +34,6 @@
 .book-image-container {
   position: relative;
   width: 15vw;
-  height: 3.5vw;
   overflow: hidden;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

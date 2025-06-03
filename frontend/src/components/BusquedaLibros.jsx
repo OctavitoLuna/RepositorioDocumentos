@@ -40,16 +40,14 @@ const BusquedaLibros = ({ onSearch }) => {
           display: flex;
           justify-content: center;
           align-items: center;
-          padding: 10px;
           margin-bottom: 20px;
-          gap: 10px;
-          max-width: 800px; /* Más ancha que antes */
+          gap: 1vh;
           margin-left: auto;
           margin-right: auto;
+          width: 50%;
         }
         .search-input {
           flex-grow: 1;
-          min-width: 0;
           padding: 12px 15px;
           border-radius: 25px;
           border: 1px solid #ccc;
@@ -58,15 +56,15 @@ const BusquedaLibros = ({ onSearch }) => {
         }
         .search-input:focus {
           outline: none;
-          border-color:rgb(212, 109, 30);
-          box-shadow: 0 0 8px rgba(222, 65, 33, 0.5);
+          border-color:rgb(59, 50, 44);
+          box-shadow: 0 0 8px rgba(75, 64, 62, 0.5);
         }
         .search-button {
           padding: 12px 18px;
-          background-color:rgb(232, 129, 26);
+          background-color:rgb(56, 54, 51);
           color: white;
           border: none;
-          border-radius: 50%;
+          border-radius: 5vh;
           cursor: pointer;
           display: flex;
           align-items: center;
@@ -75,7 +73,7 @@ const BusquedaLibros = ({ onSearch }) => {
           transition: background-color 0.3s ease;
         }
         .search-button:hover {
-          background-color: #0056b3;
+          background-color:rgb(80, 79, 64);
         }
       `}</style>
 

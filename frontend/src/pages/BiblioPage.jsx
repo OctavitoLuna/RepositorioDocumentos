@@ -99,7 +99,7 @@ const BibliotecaPage = () => {
           <button
             onClick={() => setShowCollectionsModal(true)}
             style={{
-              backgroundColor: '#D46D1E',
+              backgroundColor: 'rgb(104, 84, 47)',
               color: 'white',
               border: 'none',
               borderRadius: '8px',
@@ -117,8 +117,8 @@ const BibliotecaPage = () => {
             <button
               onClick={() => setShowDocumentForm(true)}
               style={{
-                backgroundColor: '#4b6e35',
-                color: 'white',
+                backgroundColor: 'rgb(94, 83, 58)',
+                color: 'WHITE',
                 border: 'none',
                 borderRadius: '50%',
                 width: '40px',

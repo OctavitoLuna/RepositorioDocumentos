@@ -1,66 +1,156 @@
 .aboutUsPage {
-    margin-top: 10vw;
-    background-color: transparent; /* Mantener el fondo 3D */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  margin-top: 10vw;
+  background-color: transparent; /* Fondo 3D */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Contenedor principal */
+.aboutUsInfo {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+/* Contenedor con imagen y texto, fila normal */
+.panelConTexto {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  background-color: #fff;
+  border: 30px solid #131313;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Contenedor con imagen y texto, fila invertida */
+.panelConTexto.reverse {
+  flex-direction: row-reverse;
+}
+
+/* Panel Imagen Grande */
+.panelImagen {
+  width: 50%;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.panelImage {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  border-radius: 10px;
+}
+
+/* Texto a la derecha de la imagen grande */
+.textoDerecha {
+  width: 50%;
+  color: #131313;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.textoDerecha h2 {
+  margin-bottom: 10px;
+  font-size: 28px;
+}
+
+.textoDerecha p {
+  margin-bottom: 10px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Panel Imagen Pequeña */
+.imagenPequeña {
+  width: 50%;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.smallImage {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  border-radius: 10px;
+}
+
+/* Texto a la izquierda de la imagen pequeña */
+.textoIzquierda {
+  width: 50%;
+  color: #131313;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.textoIzquierda h2 {
+  margin-bottom: 10px;
+  font-size: 28px;
+}
+
+.textoIzquierda p {
+  margin-bottom: 10px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Animaciones e interacciones */
+
+/* Escala y sombra al pasar mouse en imágenes */
+.interactiveImage:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Opcional: animación suave al aparecer el texto */
+.textoDerecha, .textoIzquierda {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s forwards;
+}
+
+.panelConTexto:nth-child(1) .textoDerecha {
+  animation-delay: 0.3s;
+}
+
+.panelConTexto.reverse .textoIzquierda {
+  animation-delay: 0.3s;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  h1 {
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .panelConTexto, .panelConTexto.reverse {
+    flex-direction: column !important;
     text-align: center;
-    margin-bottom: 20px;
   }
-  
-  /* Contenedor principal de la información de nosotros */
-  .aboutUsInfo {
-    display: flex;
-    flex-direction: column; /* Coloca los elementos uno debajo del otro */
-    justify-content: space-between;
-    align-items: flex-start; /* Alinea a la izquierda */
-    width: 80%; /* Ajusta el tamaño del recuadro */
-    background-color: #fff; /* Fondo blanco */
-    border: 30px solid #131313; /* Borde negro */
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad */
-  }
-  
-  /* Panel Imagen */
-  .panelImagen {
-    width: 50%; /* Ocupa todo el ancho disponible */
-    height: 20%; /* Altura del panel grande */
-    background-color: #555;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    margin-bottom: 20px; /* Espacio debajo */
-  }
-  
-  .panelImage {
+  .textoDerecha, .textoIzquierda {
     width: 100%;
-    height: auto;
-    object-fit: cover;
-    border-radius: 10px;
+    margin-top: 20px;
   }
-  
-  /* Imagen Pequeña (Abajo a la derecha) */
-  .imagenPequeña {
-    width: 50%; /* Ajusta el tamaño del panel pequeño */
-    background-color: #1b1717; /* Fondo más claro */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    padding: 10px;
-    align-self: flex-end; /* Alinea a la derecha */
-  }
-  
-  .smallImage {
+  .panelImagen, .imagenPequeña {
     width: 100%;
-    height: auto;
-    object-fit: cover;
-    border-radius: 10px;
   }
-  
+}

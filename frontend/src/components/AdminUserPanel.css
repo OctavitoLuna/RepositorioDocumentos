@@ -23,12 +23,11 @@
 /* Contenedor principal del panel */
 .admin-user-panel-container {
     background-color: var(--primary-dark-bg);
-    padding: 40px;
-    border-radius: 18px;
+    padding: 2vh;
+    border-radius: 1vh;
     box-shadow: 0 15px 40px var(--shadow-strong);
-    max-width: 1200px; /* Reducido un 30% (1200px * 0.7) */
     width: 90%;
-    margin: 150px auto 40px auto; /* Ajuste clave: Empieza más abajo del HeaderBar */
+    margin: 22vh auto 5vh auto; /* Ajuste clave: Empieza más abajo del HeaderBar */
     position: relative;
     z-index: 5; /* Asegura que esté por encima del fondo 3D */
     color: var(--text-light);
@@ -55,7 +54,7 @@
 /* Título del panel */
 .admin-user-panel-container h2 {
     text-align: center;
-    color: var(--accent-oak-light); /* Color roble claro para el título */
+    color: var(white); /* Color roble claro para el título */
     margin-bottom: 40px;
     font-size: 2.8rem;
     font-weight: 700;
@@ -85,9 +84,27 @@
     transition: all 0.3s ease;
 }
 
-.admin-user-panel-header input::placeholder {
-    color: var(--text-secondary);
+.admin-user-panel-header button.create-user-button {
+    padding: 15px 35px;
+    background-color: var(--primary-blue-button); /* Color azul para este botón */
+    color: rgb(43, 40, 40) !important;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1.3rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
+
+.admin-user-panel-header button.create-user-button:hover {
+    background-color: var(--primary-blue-button-hover); /* Hover del color azul */
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
 
 .admin-user-panel-header input:focus {
     border-color: var(--accent-oak-light); /* Color roble claro al enfocar */
@@ -144,7 +161,7 @@
 .user-table th {
     background-color: var(--table-header-bg);
     font-weight: bold;
-    color: var(--accent-oak-light); /* Color roble claro para los encabezados */
+    color: white; /* O el color que prefieras */
     text-transform: uppercase;
     letter-spacing: 1.8px;
     font-size: 1.2rem;

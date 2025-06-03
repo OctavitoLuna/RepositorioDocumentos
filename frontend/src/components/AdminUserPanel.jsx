@@ -172,7 +172,7 @@ const AdminUserPanel = () => {
 
     return (
         <div className="admin-user-panel-container"> {/* Asegúrate de que esta clase esté aquí */}
-            <h2>Gestión de Usuarios (Panel de Administrador)</h2>
+            <h2>Gestionar de Usuarios</h2>
 
             {message && <div className={`message ${messageType}`}>{message}</div>}
 
@@ -184,9 +184,14 @@ const AdminUserPanel = () => {
                     // value={searchTerm}
                     // onChange={e => setSearchTerm(e.target.value)}
                 />
-                <button onClick={handleCreateUser} className="create-user-button">
-                    Crear Nuevo Usuario
-                </button>
+            <button
+            onClick={handleCreateUser}
+            className="create-user-button"
+            style={{ backgroundColor: 'beige' }}
+            >
+            Crear Nuevo Usuario
+            </button>
+
             </div>
 
             <div className="users-list">
