@@ -4,14 +4,14 @@ import FiltroLibro from '../components/FiltroLibro';
 import ContenidoCategoria from '../components/ContenidoCategoria';
 import BookData from '../components/BookData';
 // import ModalDetalleLibro from '../components/ModalDetalleLibro';
-// import CollectionsModal from '../components/collection/CollectionsModal';
+import CollectionsModal from '../components/collection/CollectionsModal';
 import DocumentForm from '../components/DocumentForm';
 
 const BibliotecaPage = () => {
   const [resultados, setResultados] = useState([]);
   const [filtro, setFiltro] = useState('titulo');
   const [showDocumentForm, setShowDocumentForm] = useState(false);
-
+  const [showCollectionsModal, setShowCollectionsModal] = useState(false);
   const [documentoSeleccionado, setDocumentoSeleccionado] = useState(null);
   const [showBookData, setShowBookData] = useState(false);
 
@@ -95,6 +95,23 @@ const BibliotecaPage = () => {
           <FiltroLibro onFilterChange={setFiltro} />
           <BusquedaLibros onSearch={handleSearch} />
 
+          {/* Botón "Mis Colecciones" */}
+          <button
+            onClick={() => setShowCollectionsModal(true)}
+            style={{
+              backgroundColor: '#D46D1E',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              padding: '10px 20px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              marginLeft: '15px',
+            }}
+          >
+            Mis Colecciones
+          </button>
+
           {/* Botón "+" visible solo para admin */}
           {userRole === 'admin' && (
             <button
@@ -143,19 +160,13 @@ const BibliotecaPage = () => {
           />
         )}
 
-        {/* Comentados para evitar que aparezcan */}
-        {/* <ModalDetalleLibro
-          documento={documentoSeleccionado}
-          visible={modalVisible}
-          onClose={() => setModalVisible(false)}
-        /> */}
-
-        {/* <CollectionsModal
+        {/* Modal Colecciones */}
+        <CollectionsModal
           visible={showCollectionsModal}
           onClose={() => setShowCollectionsModal(false)}
-          usuarioId={'68150275b0a432b34c21344d'}
+          usuarioId={usuarioResponsableId || '68150275b0a432b34c21344d'}
           onSelectDocument={handleSelectBook}
-        /> */}
+        />
       </div>
     </div>
   );
