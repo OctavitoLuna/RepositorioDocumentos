@@ -7,6 +7,10 @@ const { ApolloServer, gql } = require("apollo-server-express");
 const http = require("http");
 const { Server } = require("socket.io");
 
+// Swagger Imports
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+
 // Importa rutas
 const documentRoutes = require("./routes/documentRoutes");
 const commentRoutes = require("./routes/commentRoutes");
@@ -22,6 +26,27 @@ const { Document, Comment, User, Log } = require("./models/models");
 const app = express();
 const PORT_EXPRESS = 3001; // Express y REST
 const PORT_APOLLO = 3002;  // Apollo GraphQL
+
+// Swagger Docs Setup
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "API Documentation for Your Project",
+      version: "1.0.0",
+      description: "Documentation of the REST API for the project",
+    },
+    servers: [
+      {
+        url: "http://localhost:3001",
+      },
+    ],
+  },
+  apis: ["./routes/*.js"], // Archivos donde están las rutas que se documentarán
+};
+
+const swaggerDocs = swaggerJSDoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Middleware CORS
 app.use(cors({
@@ -105,7 +130,7 @@ const typeDefs = gql`
     getDocumentStatsByYear: [DocumentStats]
   }
 `;
-// Resolvers GraphQL
+
 const resolvers = {
   Query: {
     getDocumentStatsByYear: async () => {
@@ -166,8 +191,8 @@ async function start() {
 
   // Escuchar servidor HTTP con Express y WebSocket
   serverHttp.listen(PORT_EXPRESS, () => {
-    console.log(`Servidor Express y WebSocket corriendo en http://localhost:${PORT_EXPRESS}`); // Corregido
-    console.log(`GraphQL listo en http://localhost:${PORT_EXPRESS}${apolloServer.graphqlPath}`); // Corregido
+    console.log(`Servidor Express y WebSocket corriendo en http://localhost:${PORT_EXPRESS}`);
+    console.log(`GraphQL listo en http://localhost:${PORT_EXPRESS}${apolloServer.graphqlPath}`);
   });
 }
 
